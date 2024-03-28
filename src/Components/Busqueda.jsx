@@ -7,7 +7,12 @@ const Busqueda = () => {
   const [showResults, setShowResults] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const fechaActual = new Date().toISOString().split('T')[0];
+
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
+  const day = String(currentDate.getDate()).padStart(2, '0');
+  const fechaActual = `${year}-${month}-${day}`;
 
 
   const handleFormSubmit = async (event) => {
@@ -16,12 +21,14 @@ const Busqueda = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/Herramientas/buscar/${searchQuery}`
+    
+        `http://localhost:8080/Herramientas/buscar/${searchQuery}/${startDate}/${endDate}`
       );
       if (response.ok) {
         const data = await response.json();
         setSearchResults(Array.isArray(data) ? data : [data]);
         setShowResults(true); // Show results when fetched
+        console.log(data);
       } else {
         console.error("Failed to fetch search results");
         setSearchResults(null); // Reset search results on fetch failure

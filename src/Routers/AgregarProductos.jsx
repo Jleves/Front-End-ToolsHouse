@@ -6,13 +6,17 @@ import { useParams } from "react-router-dom";
 
 const AgregarProductos = () => {
   const [productData, setProductData] = useState({
+    id: null,
     nombre: "",
     descripcion: "",
     stock: 0,
     precio: 0,
-    categoria: "",
+    categoria: {
+      id: "",
+      titulo: "Seleccione categoría"
+    },
     disponibilidad: "",
-    caracteristicas:[],
+    caracteristicas: [],
     imageUrls: Array(1).fill({ url: "" }),
   });
   const { isLogged, token } = useAuth();
@@ -31,22 +35,23 @@ const AgregarProductos = () => {
       })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setProductData({
+          id: data.id,
           nombre: data.nombre,
           descripcion: data.descripcion,
           stock: data.stock,
           precio: data.precio,
-          categoria: data.categoria ? data.categoria.titulo || "" : "",
-          caracteristicas: data.caracteristicas ? data.caracteristicas.titulo : "",
-          imageUrls: data.imageUrls || [] 
+          categoria: data.categoria,
+          caracteristicas: data.caracteristicas,
+          imageUrls: data.imagenes || [] 
           
         })
+        console.log(data);
       })
       .catch((error) => {
         console.error("Error:", error.message);
         toast.error(
-          `Ha ocurrido un problema al obtener la categoria. ${error.message}`
+          `Ha ocurrido un problema al obtener la Herramienta. ${error.message}`
         );
       })
       
@@ -155,8 +160,32 @@ const handleCheckboxInputChange = (e) => {
       );
       return;
     }
+
+    if (productData.imageUrls.length < 5 ) {
+      toast.error(
+        "Mínimo 5 imagenes."
+      );
+      return;
+    }
+
+
     if( id ) {
       console.log(id);
+
+const prueba = {
+  id: productData.id,
+  categoria: productData.categoria,
+  stock: productData.stock,
+  precio: productData.precio,
+  disponibilidad: true,
+  nombre: productData.nombre,
+  descripcion: productData.descripcion,
+  caracteristicas: productData.caracteristicas,
+  imagenes: productData.imageUrls.filter((url) => url !== ""),
+}
+console.log('Envio estoooooo ', prueba)
+
+
       try {
         const response = await fetch("http://localhost:8080/Herramientas", {
           method: "PUT",
@@ -172,6 +201,7 @@ const handleCheckboxInputChange = (e) => {
             disponibilidad: true,
             nombre: productData.nombre,
             descripcion: productData.descripcion,
+            caracteristicas: productData.caracteristicas,
             imagenes: productData.imageUrls.filter((url) => url !== ""),
           }),
         });
@@ -180,9 +210,9 @@ const handleCheckboxInputChange = (e) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
   
-        const responseData = await response.json();
+        const responseData = await response.text();
         console.log("Success:", responseData);
-        toast.success("Se ha agregado exitosamente el producto!");
+        toast.success("Se ha actualizado exitosamente el producto!");
       } catch (error) {
         console.error("Error:", error.message);
         toast.error(
@@ -205,7 +235,7 @@ const handleCheckboxInputChange = (e) => {
             disponibilidad: true,
             nombre: productData.nombre,
             descripcion: productData.descripcion,
-            caracteristicas:productData.caracteristicas.fill((titulo) => titulo !== ""),
+            caracteristicas:productData.caracteristicas,
             imagenes: productData.imageUrls.filter((url) => url !== ""),
           }),
         });
@@ -229,8 +259,6 @@ const handleCheckboxInputChange = (e) => {
     
   };
 
-  
- 
   useEffect(() => {
     fetch("http://localhost:8080/Categorias", {
       method: "GET",
@@ -350,7 +378,7 @@ const handleCheckboxInputChange = (e) => {
               <select
                 className="p-2 rounded-lg my-2 w-full text-black"
                 id="categoria"
-                value={productData.categoria}
+                value={productData.categoria.id}
                 onChange={handleInputChange}
               >
                 <option hidden>Seleccionar...</option>
@@ -372,7 +400,7 @@ const handleCheckboxInputChange = (e) => {
                 id={`opcion${caracteristica.id}`}
                 name="caracteristicas"
                 value={caracteristica.id}
-                // checked={productData.caracteristicas.includes(caracteristica.id)}
+                checked={productData.caracteristicas.map(item => item.id).includes(caracteristica.id)}
                 onChange={handleCheckboxInputChange}
                 />
                 <label htmlFor={`opcion${caracteristica.id}`}>{caracteristica.titulo}</label>

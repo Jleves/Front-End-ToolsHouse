@@ -24,14 +24,7 @@ const Detail = () => {
   const [reseñas, setReseñas] = useState([]);
   const { isLogged } = useAuth();
 
-  const caracteristicas = [
-    { id: 1, titulo: "Electrico", icono: "bucket" },
-    { id: 2, titulo: "Manual", icono: "hammer" },
-    { id: 3, titulo: "Carga rapida", icono: "carBattery" },
-    { id: 4, titulo: "Repuestos", icono: "paintBrush" },
-    { id: 5, titulo: "Facil agarre", icono: "trowel" },
-    { id: 6, titulo: "facil Armado", icono: "powerOff" },
-  ];
+ 
 
   useEffect(() => {
     const fetchProducto = async () => {
@@ -66,7 +59,7 @@ const Detail = () => {
         };
 
         setProducto(productoData);
-
+        console.log(productoData);
         if (productoData.fechaInicioReserva && productoData.fechaFinalReserva) {
           const blocked = generateBlockedDates(
             productoData.fechaInicioReserva,
