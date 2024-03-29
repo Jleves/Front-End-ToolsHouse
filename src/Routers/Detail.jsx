@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Favs from "../Components/Favs";
 import { toast } from "sonner";
+import Rating from "../Components/Rating";
 
 const Detail = () => {
   const [producto, setProducto] = useState(null);
@@ -22,6 +23,7 @@ const Detail = () => {
   const [rating, setRating] = useState(0);
   const [opinion, setOpinion] = useState("");
   const [reseñas, setReseñas] = useState([]);
+  const [toolRating, setToolRating] = useState(0)
   const { isLogged } = useAuth();
 
  
@@ -59,34 +61,59 @@ const Detail = () => {
         };
 
         setProducto(productoData);
-        console.log(productoData);
+        
         if (productoData.fechaInicioReserva && productoData.fechaFinalReserva) {
           const blocked = generateBlockedDates(
             productoData.fechaInicioReserva,
             productoData.fechaFinalReserva
           );
-          // console.log(blocked);
+          
           setBlockedDates(blocked);
         }
       } catch (error) {
         console.error("Error haciendo el fetch:", error);
       }
     };
-    const fetchReseñas = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/Reseñas");
-        if (!response.ok) {
-          throw new Error("Error al obtener las reseñas");
-        }
-        const data = await response.json();
-        setReseñas(data);
-      } catch (error) {
-        console.error("Error al obtener las reseñas:", error);
-      }
-    };
-    fetchReseñas();
+    fetchReseñasPorHerramienta();
     fetchProducto();
   }, [id]);
+
+
+  const fetchReseñasPorHerramienta = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/Reseñas");
+      if (!response.ok) {
+        throw new Error("Error al obtener las reseñas");
+      }
+      const data = await response.json();
+      
+      const resenasHerramienta = data.filter(resena => resena.herramienta_idReseña?.id === Number(id))
+      setReseñas([...resenasHerramienta]);
+      getToolRating([...resenasHerramienta]);
+    } catch (error) {
+      console.error("Error al obtener las reseñas:", error);
+    }
+  };
+
+  const getToolRating = (resenas) => {
+    const count = resenas.length
+    let sumaRating = 0
+
+    if(count === 0) {
+      return;
+    }
+
+    resenas.map(resena => {
+      sumaRating += resena?.raiting || 0;
+    })
+
+    if(sumaRating === 0) {
+      return;
+    }
+    const rating = sumaRating / count;
+    
+    setToolRating(rating)
+  }
 
   const handleReserveClick = () => {};
 
@@ -113,18 +140,17 @@ const Detail = () => {
     const day = String(currentDate.getDate()).padStart(2, "0");
 
     const formattedDate = `${year}-${month}-${day}`;
-    console.log("fecha actual:", currentDate);
 
     const newReview = {
       fecha: formattedDate,
-      // usuario: "Usuario",
+      // TODO: Debe enviarse la informacion de la reserva, posiblmente el reservaId
+      // reserva_id: reserva.id
       raiting: rating,
       comentario: opinion,
       herramienta_idReseña: producto.id,
-      id: producto.id,
     };
 
-    console.log("Nueva reseña:", newReview);
+    
     try {
       const response = await fetch("http://localhost:8080/Reseñas", {
         method: "POST",
@@ -139,18 +165,7 @@ const Detail = () => {
         throw new Error("Error al agregar la reseña");
       }
 
-      const updatedResponse = await fetch("http://localhost:8080/Reseñas");
-      console.log(
-        "Respuesta del servidor al obtener las reseñas actualizadas:",
-        updatedResponse
-      );
-
-      if (!updatedResponse.ok) {
-        throw new Error("Error al obtener las reseñas actualizadas");
-      }
-      const updatedData = await updatedResponse.json();
-      console.log("Reseñas actualizadas:", updatedData);
-      setReseñas([...reseñas, newReview]);
+      await fetchReseñasPorHerramienta();
 
       setRating(0);
       setOpinion("");
@@ -188,6 +203,8 @@ const Detail = () => {
       }
     }
   };
+
+
 
   const handleEndDateChange = (date) => {
     setEndDate(date);
@@ -285,6 +302,9 @@ const Detail = () => {
           <div className="md:w-6/12 d-flex flex-col justify-center mr-6">
             <div className="flex items-center mb-2">
               <h5 className="font-semibold text-3xl">{producto.nombre}</h5>
+            </div>
+            <div className="flex items-center mb-4">
+              <Rating rating={toolRating}/> 
             </div>
             <span className="rounded-full px-4 py-1 bg-colorSecundario text-white text-md">
               {producto.categoria.titulo}

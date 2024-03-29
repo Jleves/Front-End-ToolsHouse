@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+const currentDate = new Date();
+const year = currentDate.getFullYear();
+const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
+const day = String(currentDate.getDate()).padStart(2, '0');
+const fechaActual = `${year}-${month}-${day}`;
+
+
 const Busqueda = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState(null);
   const [showResults, setShowResults] = useState(false);
-  const [startDate, setStartDate] = useState('');
+  const [startDate, setStartDate] = useState(fechaActual);
   const [endDate, setEndDate] = useState('');
 
-  const currentDate = new Date();
-  const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, '0'); 
-  const day = String(currentDate.getDate()).padStart(2, '0');
-  const fechaActual = `${year}-${month}-${day}`;
+ 
 
 
   const handleFormSubmit = async (event) => {

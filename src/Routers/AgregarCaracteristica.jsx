@@ -113,7 +113,7 @@ const AgregarCaracteristica = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const responseData = await response.json();
+        const responseData = await response.text();
         console.log(responseData);
         console.log("Success:", responseData);
         toast.success("Caracteristica actualizada con éxito!");
