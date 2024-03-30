@@ -10,6 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Favs from "../Components/Favs";
 import { toast } from "sonner";
+import Rating from "../Components/Rating";
 
 const Detail = () => {
   const [producto, setProducto] = useState(null);
@@ -22,16 +23,10 @@ const Detail = () => {
   const [rating, setRating] = useState(0);
   const [opinion, setOpinion] = useState("");
   const [reseñas, setReseñas] = useState([]);
+  const [toolRating, setToolRating] = useState(0)
   const { isLogged } = useAuth();
 
-  const caracteristicas = [
-    { id: 1, titulo: "Electrico", icono: "bucket" },
-    { id: 2, titulo: "Manual", icono: "hammer" },
-    { id: 3, titulo: "Carga rapida", icono: "carBattery" },
-    { id: 4, titulo: "Repuestos", icono: "paintBrush" },
-    { id: 5, titulo: "Facil agarre", icono: "trowel" },
-    { id: 6, titulo: "facil Armado", icono: "powerOff" },
-  ];
+ 
 
   useEffect(() => {
     const fetchProducto = async () => {
@@ -60,40 +55,65 @@ const Detail = () => {
           precio: responseData.precio,
           categoria: responseData.categoria,
           imagenes: imagenes,
-          caracteristicas: caracteristicas,
+          caracteristicas: responseData.caracteristicas,
           fechaInicioReserva: "2024-04-10",
           fechaFinalReserva: "2024-04-16",
         };
 
         setProducto(productoData);
-
+        
         if (productoData.fechaInicioReserva && productoData.fechaFinalReserva) {
           const blocked = generateBlockedDates(
             productoData.fechaInicioReserva,
             productoData.fechaFinalReserva
           );
-          // console.log(blocked);
+          
           setBlockedDates(blocked);
         }
       } catch (error) {
         console.error("Error haciendo el fetch:", error);
       }
     };
-    const fetchReseñas = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/Reseñas");
-        if (!response.ok) {
-          throw new Error("Error al obtener las reseñas");
-        }
-        const data = await response.json();
-        setReseñas(data);
-      } catch (error) {
-        console.error("Error al obtener las reseñas:", error);
-      }
-    };
-    fetchReseñas();
+    fetchReseñasPorHerramienta();
     fetchProducto();
   }, [id]);
+
+
+  const fetchReseñasPorHerramienta = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/Reseñas");
+      if (!response.ok) {
+        throw new Error("Error al obtener las reseñas");
+      }
+      const data = await response.json();
+      
+      const resenasHerramienta = data.filter(resena => resena.herramienta_idReseña?.id === Number(id))
+      setReseñas([...resenasHerramienta]);
+      getToolRating([...resenasHerramienta]);
+    } catch (error) {
+      console.error("Error al obtener las reseñas:", error);
+    }
+  };
+
+  const getToolRating = (resenas) => {
+    const count = resenas.length
+    let sumaRating = 0
+
+    if(count === 0) {
+      return;
+    }
+
+    resenas.map(resena => {
+      sumaRating += resena?.raiting || 0;
+    })
+
+    if(sumaRating === 0) {
+      return;
+    }
+    const rating = sumaRating / count;
+    
+    setToolRating(rating)
+  }
 
   const handleReserveClick = () => {};
 
@@ -120,18 +140,17 @@ const Detail = () => {
     const day = String(currentDate.getDate()).padStart(2, "0");
 
     const formattedDate = `${year}-${month}-${day}`;
-    console.log("fecha actual:", currentDate);
 
     const newReview = {
       fecha: formattedDate,
-      // usuario: "Usuario",
+      // TODO: Debe enviarse la informacion de la reserva, posiblmente el reservaId
+      // reserva_id: reserva.id
       raiting: rating,
       comentario: opinion,
       herramienta_idReseña: producto.id,
-      id: producto.id,
     };
 
-    console.log("Nueva reseña:", newReview);
+    
     try {
       const response = await fetch("http://localhost:8080/Reseñas", {
         method: "POST",
@@ -146,18 +165,7 @@ const Detail = () => {
         throw new Error("Error al agregar la reseña");
       }
 
-      const updatedResponse = await fetch("http://localhost:8080/Reseñas");
-      console.log(
-        "Respuesta del servidor al obtener las reseñas actualizadas:",
-        updatedResponse
-      );
-
-      if (!updatedResponse.ok) {
-        throw new Error("Error al obtener las reseñas actualizadas");
-      }
-      const updatedData = await updatedResponse.json();
-      console.log("Reseñas actualizadas:", updatedData);
-      setReseñas([...reseñas, newReview]);
+      await fetchReseñasPorHerramienta();
 
       setRating(0);
       setOpinion("");
@@ -196,6 +204,8 @@ const Detail = () => {
     }
   };
 
+
+
   const handleEndDateChange = (date) => {
     setEndDate(date);
   };
@@ -210,7 +220,7 @@ const Detail = () => {
   if (!producto) return <div className="text-center">Cargando...</div>;
 
   return (
-    <div className="px-5 md:px-8 lg:!px-[18em] ">
+    <div className="px-3 md:px-6">
       <div className=" px-4 pt-5 justify-between">
         <div className="flex justify-between">
           <Link to="/" className="text-colorPrimario px-4 py-2 rounded">
@@ -293,6 +303,9 @@ const Detail = () => {
             <div className="flex items-center mb-2">
               <h5 className="font-semibold text-3xl">{producto.nombre}</h5>
             </div>
+            <div className="flex items-center mb-4">
+              <Rating rating={toolRating}/> 
+            </div>
             <span className="rounded-full px-4 py-1 bg-colorSecundario text-white text-md">
               {producto.categoria.titulo}
             </span>
@@ -319,7 +332,7 @@ const Detail = () => {
           </div>
         </div>
         <div className="flex flex-col md:flex-row justify-between py-4 px-10 gap-10 ">
-          <div className="flex flex-col md:flex-row items-center">
+          <div className="flex flex-col md:flex-row items-center gap-4">
             <DatePicker
               selected={startDate}
               onChange={handleStartDateChange}
@@ -349,14 +362,12 @@ const Detail = () => {
             />
             <button
               onClick={handleReserveClick}
-              className=" block md:inline-block justify-center  h-10 rounded-lg border-2 hover:scale-105  text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
+              className=" mx-4 block md:inline-block justify-center  h-10 rounded-lg border-2 hover:scale-105  text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
             >
               Reservar
             </button>
-          </div>
-          <div className="flex flex-col md:flex-row gap-4 px-4">
             <button
-              className="block md:inline-block justify-center  h-10 rounded-lg border-2 hover:scale-105  text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
+              className=" mx-4 block md:inline-block justify-center  h-10 rounded-lg border-2 hover:scale-105  text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
               onClick={openPolicy}
             >
               Políticas
@@ -364,10 +375,13 @@ const Detail = () => {
             {isPolicyOpen && <Politicas onClose={closePolicy} />}
             <button
               onClick={handleRatingClick}
-              className=" block md:inline-block justify-center  h-10 rounded-lg border-2 hover:scale-105  text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
+              className="mx-4 block md:inline-block justify-center  h-10 rounded-lg border-2 hover:scale-105  text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
             >
-              Agregar Reseña
+              Danos tu Opinion
             </button>
+          </div>
+          <div className="flex flex-col md:flex-row gap-4 px-4">
+            
 
             {showRating && isLogged && (
               <div className="flex flex-col gap-4 px-4">

@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 
 const AuthContext = createContext();
 
@@ -8,6 +8,32 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [isLogged, setIsLogged] = useState(!!localStorage.getItem("token"));
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        if (token) {
+          const response = await fetch(`http://localhost:8080/user/profile`, {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Error fetching user data: ${response.status}`);
+          }
+
+          const userData = await response.json();
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUser();
+  }, [token]);
 
   const login = (token) => {
     localStorage.setItem("token", token);
@@ -32,6 +58,7 @@ export const AuthProvider = ({ children }) => {
     token,
     isLogged,
   };
+ 
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

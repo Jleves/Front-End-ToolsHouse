@@ -5,7 +5,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getIconByName } from "./../utilities/icons";
 import { useAuth } from "../Context/AuthContext";
 
-const iconNames = ["wrench", "car", "user", "hammer", "ruler", "trowel"];
+const iconNames = [
+  "wrench", 
+  "car", 
+  "user", 
+  "hammer", 
+  "ruler", 
+  "trowel", 
+  "leaf", 
+  "water", 
+  "hotel", 
+  "houseMedical",
+  "helmetSafety",
+  "explosion",
+  "carBattery",
+  "batteryFull",
+  "powerOff",
+  "tableList",
+  "fire",
+  "images",
+  "tree",
+  "mapMarker",
+  "mapSigns",
+  "toolbox",
+  "dumpster",
+  "paintBrush",
+  "plug"
+  ];
 
 const AgregarCategoria = () => {
   const { id } = useParams();

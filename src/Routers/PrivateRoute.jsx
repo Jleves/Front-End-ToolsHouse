@@ -4,10 +4,15 @@ import { useAuth } from '../Context/AuthContext';
 
 export const PrivateRoute = () => {
 
- const { isLogged } = useAuth();
-  //console.log(token)
-  return isLogged ? <Outlet /> : <Navigate to="/" />;
+ const { isLogged, user } = useAuth();
+  let isAdmin = false
+ if (user?.role === 'ADMIN' || user?.role === 'SUPERADMIN') {
+  isAdmin = true;
+ }
+
+ console.log(isAdmin);
+  
+  return isLogged && isAdmin ? <Outlet /> : <Navigate to="/" />;
   
 };
 
-// };

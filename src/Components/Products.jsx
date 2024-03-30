@@ -21,6 +21,7 @@ const Products = ({ selectedCategory }) => {
 
         const responseData = await response.json();
 
+        const resenas = await fetchResenas();
         const productosApiFake = Array.isArray(responseData)
           ? responseData.map((producto) => ({
               id: producto.id,
@@ -29,17 +30,60 @@ const Products = ({ selectedCategory }) => {
               precio: producto.precio,
               categoria: producto.categoria,
               imagenes: producto.imagenes.map((imagen) => imagen.url),
+              rating: getToolRating(producto.id, resenas)
             }))
           : [];
 
         const ordenRandom = getRandomOrder(productosApiFake);
+  
         setProductos(ordenRandom);
       } catch (error) {
         console.log(error.message);
       }
     };
     fetchData();
+    
   }, []);
+
+
+  const fetchResenas = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/Reseñas");
+      if (!response.ok) {
+        throw new Error("Error al obtener las reseñas");
+      }
+      const data = await response.json();
+
+      return data;
+
+    } catch (error) {
+      console.error("Error al obtener las reseñas:", error);
+    }
+  };
+
+  const getToolRating = (idHerramienta, resenas) => {
+
+
+    const resenasPorHerramienta = resenas.filter(resena => resena.herramienta_idReseña?.id === Number(idHerramienta))
+    const count = resenasPorHerramienta.length
+    let sumaRating = 0
+
+    if(count === 0) {
+      return sumaRating;
+    }
+
+    resenasPorHerramienta.map(resena => {
+      sumaRating += resena?.raiting || 0;
+    })
+
+    if(sumaRating === 0) {
+      return 0;
+    }
+    const rating = sumaRating / count;
+    
+
+    return rating
+  }
 
   const getRandomOrder = (array) => {
     return array.reduce((result, currentValue) => {

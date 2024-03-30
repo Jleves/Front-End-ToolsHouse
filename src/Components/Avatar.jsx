@@ -7,6 +7,9 @@ const Avatar = () => {
   const [data, setData] = useState(null);
   const [token, setToken] = useState(null);
   const navigate = useNavigate();
+  const [ mostrarBoton, setMostrarBoton ] = useState(true);
+  
+
 
   useEffect(() => {
     // Aquí tomamos el token que está almacenado en localStorage
@@ -21,7 +24,8 @@ const Avatar = () => {
     const fetchData = async () => {
       try {
         if (token) {
-          const response = await fetch(`http://localhost:8080/user`, {
+          const response = await fetch(`http://localhost:8080/user/profile`, {
+            method: 'GET',
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -33,14 +37,20 @@ const Avatar = () => {
 
           const responseData = await response.json();
           setData(responseData);
+          console.log(responseData);
+          setMostrarBoton(responseData.role !== 'USER');
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
+      
     };
-
+     
     fetchData();
   }, [token]);
+   
+  
+  
 
   // Verificar si data y data.name existen antes de dividir el nombre
   const firstName = data?.name ? data.name.split(" ")[0] : "";
@@ -61,12 +71,16 @@ const Avatar = () => {
   return (
     <>
       <div className="flex items-center flex-row gap-2 md:gap-4">
-        <Link to={`/admin`}>
-          <button className="px-4 py-2 bg-colorPrimario text-xs md:text-base  text-white rounded hover:bg-colorPrimarioHover flex items-center gap-2">
-            <FontAwesomeIcon icon={getIconByName("user")} size="sm" />
-            Panel Admin
-          </button>
-        </Link>
+      {mostrarBoton && (
+    <Link to={`/admin`}>
+    <button 
+      className="px-4 py-2 bg-colorPrimario text-xs md:text-base  text-white rounded hover:bg-colorPrimarioHover flex items-center gap-2">
+      <FontAwesomeIcon icon={getIconByName("user")} size="sm" />
+      Panel Admin
+    </button>
+  </Link>
+)}
+        
 
         <div className="flex items-center justify-center w-10 h-10  bg-[#01A9D6] rounded-full">
           <span className="font-light text-base text-white ">
