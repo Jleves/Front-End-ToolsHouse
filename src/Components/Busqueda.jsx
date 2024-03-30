@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import ProductCard from "./ProductCard";
 
 const currentDate = new Date();
 const year = currentDate.getFullYear();
@@ -27,14 +28,21 @@ const Busqueda = () => {
     
         `http://localhost:8080/Herramientas/buscar/${searchQuery}/${startDate}/${endDate}`
       );
+      
       if (response.ok) {
         const data = await response.json();
-        setSearchResults(Array.isArray(data) ? data : [data]);
-        setShowResults(true); // Show results when fetched
-        console.log(data);
+        const dataFinal = Array.isArray(data) ? data : [data];
+        const dataFinalConUrls = dataFinal.map(producto => {
+          return {
+            ...producto,
+            imagenes: producto.imagenes.map(imagen => imagen.url),
+          }
+        })
+        setSearchResults(dataFinalConUrls);
+        setShowResults(true); 
       } else {
-        console.error("Failed to fetch search results");
-        setSearchResults(null); // Reset search results on fetch failure
+        toast.error(`No se encontraron herramientas disponibles`);
+        setSearchResults(null); 
       }
     } catch (error) {
       console.error("Error fetching search results:", error);
@@ -46,18 +54,13 @@ const Busqueda = () => {
   const handleInputBlur = (event) => {
     if (event.target.id !== 'default-search') {
       setShowResults(false); 
-  };
+    };
   }
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
     setShowResults(false);
   };
 
-  const handleInputFocus = () => {
-    if (searchQuery.trim() === "" ) {
-      setShowResults(true); 
-  };
-}
 
   return (
     <div className="relative">
@@ -89,7 +92,6 @@ const Busqueda = () => {
             autoComplete="off"
             value={searchQuery}
             onChange={handleInputChange}
-            onFocus={handleInputFocus} // Show results when input is focused
             onBlur={handleInputBlur} 
             required
           />
@@ -130,18 +132,28 @@ const Busqueda = () => {
 
       {/* Mostrar resultados */}
       {showResults && (
-        <div className="absolute top-full pt-2 pb-4 pl-4 w-full rounded-xl bg-[#e4e2d7]">
+        <div className="p-4 rounded-xl bg-[#e4e2d7]">
           {searchResults ? (
-            <ul>
-              {searchResults.map((item) => (
-                <Link key={item.id} to={"/detail/" + item.id}>
-                  <li className="w-[4em] flex items-center gap-2">
-                    <img src={item.imagenes[0].url} alt={item.nombre} />
-                    <p> {item.nombre}</p>
-                  </li>
-                </Link>
-              ))}
-            </ul>
+            // <ul>
+            //   {searchResults.map((item) => (
+            //     <Link key={item.id} to={"/detail/" + item.id}>
+            //       <li className="w-[4em] flex items-center gap-2">
+            //         <img src={item.imagenes[0].url} alt={item.nombre} />
+            //         <p> {item.nombre}</p>
+            //       </li>
+            //     </Link>
+            //   ))}
+            // </ul>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {searchResults
+                .map((producto) => (
+                  <div key={producto.id} className="tarjetaProducto transition-all">
+                    <ProductCard producto={producto} />
+                  </div>
+                ))}
+            </div>
+
           ) : (
             <p>No se encontraron resultados.</p>
           )}
