@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import Favs from "./Favs";
 const ProductCard = ({ producto }) => {
   return (
     <Link to={"/detail/" + producto.id}>
@@ -21,6 +22,7 @@ const ProductCard = ({ producto }) => {
               <h5 className="font-semibold text-xl">{producto.nombre}</h5>
               <span className="rounded-full px-4 bg-colorSecundario text-colorClaro text-sm">
                 {producto.categoria.titulo}
+             
               </span>
             </div>
             <p className="fs-6 card-text text-secondary">
@@ -34,8 +36,10 @@ const ProductCard = ({ producto }) => {
             </h2>
           </div>
         </div>
+
       </div>
     </Link>
+    
   );
 };
 

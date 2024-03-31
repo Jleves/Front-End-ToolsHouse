@@ -15,6 +15,37 @@ const Favs = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (token) {
+          const response = await fetch(`http://localhost:8080/user/2/favs/3`, {
+            method: "POST",
+          headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          
+           
+          });
+
+          if (!response.ok) {
+            throw new Error(`Error fetching user data: ${response.status}`);
+          }
+
+          const responseData = await response.json();
+          console.log('respuesta de favoritos'+ responseData  );
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
+  }, [token]);
+
+  
+
+
   return (
     <>
       {token && (
