@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
+import PropTypes from "prop-types";
 
 const Products = ({ selectedCategory }) => {
   const [productos, setProductos] = useState([]);
@@ -54,6 +55,7 @@ const Products = ({ selectedCategory }) => {
 
   useEffect(() => {
     setStart((currentPage - 1) * pageSize);
+    console.log(start);
   }, [currentPage]);
 
   const handleNextClick = () => {
@@ -70,7 +72,11 @@ const Products = ({ selectedCategory }) => {
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {productos
-          .filter((producto) => !selectedCategory || producto.categoria.titulo === selectedCategory)
+          .filter(
+            (producto) =>
+              !selectedCategory ||
+              producto.categoria.titulo === selectedCategory
+          )
           .map((producto) => (
             <div key={producto.id} className="tarjetaProducto transition-all">
               <ProductCard producto={producto} />
@@ -87,11 +93,11 @@ const Products = ({ selectedCategory }) => {
         >
           <span aria-hidden="true">&laquo;</span>
         </button>
-  
+
         <button className="bg-colorSecundario text-white px-4 py-2 rounded-md">
           <u>{currentPage}</u>
         </button>
-  
+
         <button
           onClick={handleNextClick}
           disabled={currentPage === Math.ceil(productos.length / pageSize)}
@@ -106,6 +112,10 @@ const Products = ({ selectedCategory }) => {
       </div>
     </div>
   );
+};
+
+Products.propTypes = {
+  selectedCategory: PropTypes.isRequired,
 };
 
 export default Products;

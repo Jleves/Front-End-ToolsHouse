@@ -7,36 +7,36 @@ import { useParams } from "react-router-dom";
 const Reseñas = ({ reseñasProp }) => {
   const { id } = useParams();
   const [detailId, setDetailId] = useState("");
+  const [reseñas, setReseñas] = useState([]);
 
   useEffect(() => {
     if (id) {
       setDetailId(id);
+      console.log(detailId);
     }
-  }, [id]);
-
-  useEffect(() => {
     const fetchReseñas = async () => {
       try {
-        if (detailId) {
-          const response = await fetch("http://localhost:8080/Reseñas", {
+        const response = await fetch(
+          `http://localhost:8080/Reseñas/herramienta/${id}`,
+          {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
             },
-          });
-          if (!response.ok) {
-            throw new Error("Error al obtener las reseñas");
           }
-          const data = await response.json();
-          console.log(data);
+        );
+        if (!response.ok) {
+          throw new Error("Error al obtener las reseñas");
         }
+        const data = await response.json();
+        setReseñas(data);
+        console.log(data);
       } catch (error) {
         console.error("Error al obtener las reseñas:", error);
       }
     };
-
     fetchReseñas();
-  }, [detailId]);
+  }, [reseñasProp.id]);
 
   const formatDate = (fecha) => {
     const date = new Date(fecha);
@@ -48,10 +48,11 @@ const Reseñas = ({ reseñasProp }) => {
 
   return (
     <>
+      {/* <p>Total amount of stars: {totalStars}</p> */}
       <h2 className="mb-2 font-semibold text-lg">Reseñas</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {reseñasProp.length > 0 ? (
-          reseñasProp.map((reseña) => {
+          reseñas.map((reseña) => {
             if (
               reseña.herramienta_idReseña &&
               reseña.herramienta_idReseña.id &&

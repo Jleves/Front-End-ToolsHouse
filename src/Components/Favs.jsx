@@ -24,7 +24,7 @@ const Favs = () => {
           }  p-2 rounded`}
         >
           <button onClick={() => setIsLiked(!isLike)}>
-            <FontAwesomeIcon icon={getIconByName("heart")} size="xl" />
+            <FontAwesomeIcon icon={getIconByName("heart")} size="lg" />
           </button>
         </div>
       )}

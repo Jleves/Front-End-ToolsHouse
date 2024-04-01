@@ -15,7 +15,7 @@ const AgregarCaracteristica = () => {
     titulo: "",
     icono: "",
   });
-  const { isLogged, token } = useAuth();
+  const { token } = useAuth();
   useEffect(() => {
     if (id) {
       fetch(`http://localhost:8080/Caracteristicas/${id}`, {

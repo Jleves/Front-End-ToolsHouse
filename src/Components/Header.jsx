@@ -1,16 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../Context/AuthContext";
 import Avatar from "./Avatar";
 
 const Header = () => {
-  const { isLogged } = useAuth();
-  console.log(isLogged);
   const location = useLocation();
   const isDetailPage = location.pathname.includes("/detail");
   const col12Classes = isDetailPage
-    ? "fixed  left-0 right-0 top-0 z-50 py-4 px-5 md:px-8 bg-colorClaro flex items-center justify-between shadow-md shadow-slate-200 lg:!px-[18em]"
-    : "fixed  left-0 right-0 top-0 z-50 py-4 px-5 md:px-8 bg-colorClaro flex items-center justify-between shadow-md shadow-slate-200";
+    ? "fixed  left-0 right-0 top-0 z-50 py-4 px-5 md:px-8 bg-colorClaro flex items-center justify-between shadow-[0_0px_12px_rgba(0,0,0,0.1)] lg:!px-[18em]"
+    : "fixed  left-0 right-0 top-0 z-50 py-4 px-5 md:px-8 bg-colorClaro flex items-center justify-between shadow-[0_0px_12px_rgba(0,0,0,0.1)]";
 
   const [token, setToken] = useState(null);
 

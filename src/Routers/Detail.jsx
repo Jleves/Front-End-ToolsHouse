@@ -6,18 +6,16 @@ import Politicas from "../Components/Politicas";
 import Reseñas from "../Components/Reseñas";
 import StarRating from "../Components/StarRating";
 import { useAuth } from "../Context/AuthContext";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Favs from "../Components/Favs";
 import { toast } from "sonner";
+
+import Reserva from "../Components/Reserva";
 
 const Detail = () => {
   const [producto, setProducto] = useState(null);
   const { id } = useParams();
   const [isPolicyOpen, setIsPolicyOpen] = useState(false);
-  const [startDate, setStartDate] = useState(new Date()); // Por defecto empieza en el día de hoy
-  const [endDate, setEndDate] = useState(null);
-  const [blockedDates, setBlockedDates] = useState([]);
   const [showRating, setShowRating] = useState(false);
   const [rating, setRating] = useState(0);
   const [opinion, setOpinion] = useState("");
@@ -66,42 +64,27 @@ const Detail = () => {
         };
 
         setProducto(productoData);
-
-        if (productoData.fechaInicioReserva && productoData.fechaFinalReserva) {
-          const blocked = generateBlockedDates(
-            productoData.fechaInicioReserva,
-            productoData.fechaFinalReserva
-          );
-          // console.log(blocked);
-          setBlockedDates(blocked);
-        }
       } catch (error) {
         console.error("Error haciendo el fetch:", error);
       }
     };
-    const fetchReseñas = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/Reseñas");
-        if (!response.ok) {
-          throw new Error("Error al obtener las reseñas");
-        }
-        const data = await response.json();
-        setReseñas(data);
-      } catch (error) {
-        console.error("Error al obtener las reseñas:", error);
-      }
-    };
-    fetchReseñas();
+
     fetchProducto();
   }, [id]);
-
-  const handleReserveClick = () => {};
 
   const handleRatingClick = () => {
     if (isLogged) {
       setShowRating(true);
     } else {
-      toast.error("Tenes que loguearte para agregar una reseña.");
+      toast("Tenes que loguearte para agregar una reseña.", {
+        classNames: {
+          actionButton: "!bg-colorPrimario",
+        },
+        action: {
+          label: "Log In",
+          onClick: () => location.assign("/login"),
+        },
+      });
     }
   };
 
@@ -120,11 +103,8 @@ const Detail = () => {
     const day = String(currentDate.getDate()).padStart(2, "0");
 
     const formattedDate = `${year}-${month}-${day}`;
-    console.log("fecha actual:", currentDate);
-
     const newReview = {
       fecha: formattedDate,
-      // usuario: "Usuario",
       raiting: rating,
       comentario: opinion,
       herramienta_idReseña: producto.id,
@@ -167,39 +147,7 @@ const Detail = () => {
     }
   };
 
-  const generateBlockedDates = (inicioReserva, finReserva) => {
-    const datesInRange = [];
-    const currentDate = new Date(inicioReserva);
-    const endDate = new Date(finReserva);
-    endDate.setDate(endDate.getDate() + 1);
-    while (currentDate < endDate) {
-      datesInRange.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    return datesInRange;
-  };
-
-  const handleStartDateChange = (date) => {
-    setStartDate(date);
-    if (endDate && endDate.getTime() < date.getTime()) {
-      setEndDate(null);
-    }
-
-    if (blockedDates.length > 0 && date < blockedDates[0]) {
-      let lastValidDate = new Date(blockedDates[0]);
-      lastValidDate.setDate(lastValidDate.getDate() - 1);
-      if (lastValidDate < date) {
-        setEndDate(lastValidDate);
-      } else {
-        setEndDate(null);
-      }
-    }
-  };
-
-  const handleEndDateChange = (date) => {
-    setEndDate(date);
-  };
-
+  // Politicas
   const openPolicy = () => {
     setIsPolicyOpen(true);
   };
@@ -221,7 +169,7 @@ const Detail = () => {
 
       <div className="col-12 px-2">
         {/* Imagenes */}
-        <div className="flex justify-center gap-6 flex-col md:flex-row mb-2 p-4">
+        <div className="flex justify-center gap-2 flex-col md:flex-row mb-2 p-4">
           <div className="!rounded-l-3xl p-8 shadow w-full h-[515px] bg-white">
             <img
               src={producto.imagenes[0]}
@@ -229,7 +177,6 @@ const Detail = () => {
               alt={producto.nombre}
             />
           </div>
-
           <div className="flex m-0 md:ms-2 w-full">
             <div className="w-full flex md:flex-col md:w-full relative">
               <div className="md:flex mb-4">
@@ -242,7 +189,6 @@ const Detail = () => {
                     />
                   </div>
                 </div>
-
                 <div className="md:w-1/2 pl-2">
                   <div className="w-full !rounded-tr-3xl p-2 shadow bg-white h-[250px]">
                     <img
@@ -253,7 +199,6 @@ const Detail = () => {
                   </div>
                 </div>
               </div>
-
               <div className="md:flex">
                 <div className="md:w-1/2 pr-2">
                   <div className="w-full p-2 shadow bg-white h-[250px]">
@@ -264,7 +209,6 @@ const Detail = () => {
                     />
                   </div>
                 </div>
-
                 <div className="md:w-1/2 pl-2">
                   <div className="w-full !rounded-br-3xl p-2 shadow bg-white h-[250px]">
                     <img
@@ -281,27 +225,43 @@ const Detail = () => {
                   <FontAwesomeIcon icon={getIconByName("images")} size="lg" />
                   <span className="font-semibold">Ver más</span>
                 </button>
-
-                <Favs></Favs>
+                <Favs />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between py-6 px-10 gap-8">
-          <div className="md:w-6/12 d-flex flex-col justify-center mr-6">
-            <div className="flex items-center mb-2">
-              <h5 className="font-semibold text-3xl">{producto.nombre}</h5>
+        <div className="flex flex-col md:flex-row justify-between py-6 px-4 gap-8">
+          <div className="md:w-6/12 flex flex-col justify-between mr-6">
+            <div>
+              <div className="flex items-center mb-2 gap-4">
+                <h5 className="font-bold text-2xl">{producto.nombre}</h5>
+                <span className="rounded-full px-2 py-1 bg-black text-white text-xs">
+                  {producto.categoria.titulo}
+                </span>
+              </div>
+              <p className="text-lg mt-2">{producto.descripcion}</p>
             </div>
-            <span className="rounded-full px-4 py-1 bg-colorSecundario text-white text-md">
-              {producto.categoria.titulo}
-            </span>
-            <p className="text-lg mt-2">{producto.descripcion}</p>
-            <p className="font-bold text-2xl text-slate-900 mt-4">
-              ${producto.precio}
-            </p>
+            <div className="flex flex-col md:flex-row gap-4">
+              <button
+                className="block md:inline-block justify-center h-10 rounded-lg border  text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
+                onClick={openPolicy}
+              >
+                Políticas
+              </button>
+              {isPolicyOpen && <Politicas onClose={closePolicy} />}
+            </div>
           </div>
-          <div className="col-12 col-md-6 col-lg-3 p-2 md:p-4 border rounded-lg shadow-lg mt-2">
+
+          <div className="px-6 py-4 border border-gray-[#DDDDDD] rounded-xl p-6 shadow-[0_4px_16px_rgba(0,0,0,0.1)] bg-white">
+            <p className="font-semibold text-2xl text-slate-900 my-4">
+              ${producto.precio} USD
+              <span className="font-normal text-xl"> / dia</span>
+            </p>
+            <Reserva precio={producto.precio} producto={producto} />
+          </div>
+
+          {/* <div className="col-12 col-md-6 col-lg-3 p-2 md:p-4 border rounded-lg shadow-lg mt-2">
             <ul className="grid grid-cols-3 gap-4">
               {producto.caracteristicas.map((caracteristica) => (
                 <li
@@ -316,99 +276,53 @@ const Detail = () => {
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row justify-between py-4 px-10 gap-10 ">
-          <div className="flex flex-col md:flex-row items-center">
-            <DatePicker
-              selected={startDate}
-              onChange={handleStartDateChange}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-              minDate={new Date()}
-              placeholderText="Fecha de inicio"
-              excludeDates={blockedDates}
-              className="my-2 border mx-2 border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
-            />
-            <DatePicker
-              selected={endDate}
-              onChange={handleEndDateChange}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
-              maxDate={
-                blockedDates.length > 0 && startDate < blockedDates[0]
-                  ? blockedDates[0]
-                  : null
-              }
-              placeholderText="Fecha de fin"
-              excludeDates={blockedDates}
-              className="my-2 mx-2 border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
-            />
-            <button
-              onClick={handleReserveClick}
-              className=" block md:inline-block justify-center  h-10 rounded-lg border-2 hover:scale-105  text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
-            >
-              Reservar
-            </button>
-          </div>
-          <div className="flex flex-col md:flex-row gap-4 px-4">
-            <button
-              className="block md:inline-block justify-center  h-10 rounded-lg border-2 hover:scale-105  text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
-              onClick={openPolicy}
-            >
-              Políticas
-            </button>
-            {isPolicyOpen && <Politicas onClose={closePolicy} />}
-            <button
-              onClick={handleRatingClick}
-              className=" block md:inline-block justify-center  h-10 rounded-lg border-2 hover:scale-105  text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
-            >
-              Agregar Reseña
-            </button>
-
-            {showRating && isLogged && (
-              <div className="flex flex-col gap-4 px-4">
-                <div className="bg-white p-4 rounded-lg shadow-md ">
-                  <h2 className="text-lg font-bold mb-4">Danos tu opinión</h2>
-                  <div className="flex items-center">
-                    <StarRating value={rating} onChange={handleRatingChange} />
-                  </div>
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                      <label
-                        htmlFor="opinion"
-                        className="block text-sm font-medium "
-                      >
-                        Opinión:
-                      </label>
-                      <textarea
-                        type="text"
-                        id="opinion"
-                        autoComplete="off"
-                        value={opinion}
-                        onChange={handleOpinionChange}
-                        className=" my-2 border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleSendReview}
-                    className="bg-colorPrimario text-white px-4 py-2 rounded-lg mt-4 md:mt-0 hover:bg-colorPrimarioHover focus:outline-none focus:bg-colorPrimarioHover transition-all"
-                  >
-                    Enviar
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          </div> */}
         </div>
       </div>
 
-      <div className="col-12 col-md-6 col-lg-3 p-2 md:p-4 border rounded-lg shadow-lg mt-2">
-        <Reseñas reseñasProp={reseñas} raiting={rating} />
+      <div className="border rounded-lg shadow-lg mx-6 py-4 mt-8 flex flex-col gap-4 px-4">
+        <Reseñas reseñasProp={reseñas} raiting={rating} idProducto={id} />
+        <button
+          onClick={handleRatingClick}
+          className=" block md:inline-block justify-center h-10 rounded-lg border-2 text-black border-colorPrimario bg-white px-4  hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all"
+        >
+          Agregar Reseña
+        </button>
+
+        {showRating && isLogged && (
+          <div className="flex flex-col gap-4 px-4">
+            <div className="bg-white p-4 rounded-lg shadow-md ">
+              <h2 className="text-lg font-bold mb-4">Danos tu opinión</h2>
+              <div className="flex items-center">
+                <StarRating value={rating} onChange={handleRatingChange} />
+              </div>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                  <label
+                    htmlFor="opinion"
+                    className="block text-sm font-medium "
+                  >
+                    Opinión:
+                  </label>
+                  <textarea
+                    type="text"
+                    id="opinion"
+                    autoComplete="off"
+                    value={opinion}
+                    onChange={handleOpinionChange}
+                    className=" my-2 border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+              <button
+                onClick={handleSendReview}
+                className="bg-colorPrimario text-white px-4 py-2 rounded-lg mt-4 md:mt-0 hover:bg-colorPrimarioHover focus:outline-none focus:bg-colorPrimarioHover transition-all"
+              >
+                Enviar
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

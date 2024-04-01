@@ -7,7 +7,7 @@ import { useAuth } from "../Context/AuthContext";
 
 const ListarCategorias = () => {
   const [categorias, setCategorias] = useState([]);
-  const { isLogged, token } = useAuth();
+  const { token } = useAuth();
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
@@ -61,7 +61,6 @@ const ListarCategorias = () => {
         }));
 
         setProductos(productosMapped);
-        console.log(productosMapped);
       } catch (error) {
         console.log("Error haciendo el fetch:", error);
       }

@@ -30,7 +30,7 @@ header {
   --colorPrimario: #3c48b9;
   --colorPrimarioHover: #646fd4;
   --colorSecundario: #6771ca;
-  --colorClaro: #fffdf3;
+  --colorClaro: #fcfbf6;
 }
 
 .btnActivo:hover {
@@ -40,4 +40,15 @@ header {
 button:active,
 .tarjetaProducto:active {
   transform: scale(0.96) !important;
+}
+
+.modal-open {
+  overflow-y: hidden;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.react-datepicker__input-container {
+  position: inherit;
 }
