@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import Favs from "./Favs";
 import Rating from "./Rating";
 const ProductCard = ({ producto }) => {
   return (
@@ -22,6 +23,7 @@ const ProductCard = ({ producto }) => {
               <h5 className="font-semibold text-xl">{producto.nombre}</h5>
               <span className="rounded-full px-4 bg-colorSecundario text-colorClaro text-sm">
                 {producto.categoria.titulo}
+             
               </span>
               
             </div>
@@ -40,8 +42,10 @@ const ProductCard = ({ producto }) => {
             </h2>
           </div>
         </div>
+
       </div>
     </Link>
+    
   );
 };
 
