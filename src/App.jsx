@@ -18,6 +18,7 @@ import AgregarCaracteristica from "./Routers/AgregarCaracteristica";
 import { PrivateRoute } from "./Routers/PrivateRoute";
 import Favs from "./Components/Favs";
 import ListarFavorito from "./Routers/ListarFavorito"
+import ListarReservas from "./Routers/ListarReservas";
 
 function App() {
  
@@ -42,12 +43,14 @@ function App() {
             <Route path="caracteristicas/listar" element={<ListarCaracteristicas />}/>
             <Route path="caracteristicas/agregar" element={<AgregarCaracteristica />}/>
             <Route path="caracteristicas/agregar/:id" element={<AgregarCaracteristica />}/>
+            <Route path="*" element={<h1>Page not found - Error 404</h1>} />
+            <Route path="Fav" element={<Favs/>}/>
+            <Route path="ListarFavoritos" element={<ListarFavorito/>}/>
+            <Route path="ListarReservas" element={<ListarReservas/>}></Route>
           </Route>
         </Route>
 
-        <Route path="*" element={<h1>Page not found - Error 404</h1>} />
-        <Route path="Fav" element={<Favs/>}/>
-        <Route path="ListarFavoritos" element={<ListarFavorito/>}/>
+        
       
         </Routes>
 
