@@ -144,7 +144,7 @@ const Detail = () => {
     const newReview = {
       fecha: formattedDate,
       // TODO: Debe enviarse la informacion de la reserva, posiblmente el reservaId
-      // reserva_id: reserva.id
+      // reserva_id: producto.reserva_id.usuarioId.nombre
       raiting: rating,
       comentario: opinion,
       herramienta_idReseña: producto.id,
