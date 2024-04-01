@@ -19,7 +19,7 @@ const Favs = () => {
     const fetchData = async () => {
       try {
         if (token) {
-          const response = await fetch(`http://localhost:8080/user/2/favs/3`, {
+          const response = await fetch(`http://localhost:8080/user/{id}/favs/{herramientaId}`, {
             method: "POST",
           headers: {
               Authorization: `Bearer ${token}`,
@@ -36,7 +36,7 @@ const Favs = () => {
           console.log('respuesta de favoritos'+ responseData  );
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        
       }
     };
 

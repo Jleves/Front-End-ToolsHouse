@@ -5,7 +5,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getIconByName } from "./../utilities/icons";
 import { useAuth } from "../Context/AuthContext";
 
-const iconNames = ["wrench", "car", "user", "hammer", "ruler", "trowel"];
+const iconNames = [
+  "wrench", 
+  "car", 
+  "user", 
+  "hammer", 
+  "ruler", 
+  "trowel", 
+  "leaf", 
+  "water", 
+  "hotel", 
+  "houseMedical",
+  "helmetSafety",
+  "explosion",
+  "carBattery",
+  "batteryFull",
+  "powerOff",
+  "tableList",
+  "fire",
+  "images",
+  "tree",
+  "mapMarker",
+  "mapSigns",
+  "toolbox",
+  "dumpster",
+  "paintBrush",
+  "plug"
+];
 
 const AgregarCaracteristica = () => {
   const { id } = useParams();
@@ -37,7 +63,7 @@ const AgregarCaracteristica = () => {
         .catch((error) => {
           console.error("Error:", error.message);
           toast.error(
-            `Ha ocurrido un problema al obtener la categoria. ${error.message}`
+            `Ha ocurrido un problema al obtener la caracteristica. ${error.message}`
           );
         });
     }
@@ -61,7 +87,7 @@ const AgregarCaracteristica = () => {
 
     if (!isAllFieldsNonEmpty()) {
       toast.error(
-        "Hay campos vacios, rellena todos para poder agregar la categoria."
+        "Hay campos vacios, rellena todos para poder agregar la caracteristica."
       );
       return;
     }
@@ -74,7 +100,7 @@ const AgregarCaracteristica = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             id: caracteristicaData.id,
@@ -87,7 +113,7 @@ const AgregarCaracteristica = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const responseData = await response.json();
+        const responseData = await response.text();
         console.log(responseData);
         console.log("Success:", responseData);
         toast.success("Caracteristica actualizada con éxito!");
@@ -104,7 +130,7 @@ const AgregarCaracteristica = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             id: caracteristicaData.id,

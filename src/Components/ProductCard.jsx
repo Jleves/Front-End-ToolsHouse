@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Favs from "./Favs";
+import Rating from "./Rating";
 const ProductCard = ({ producto }) => {
   return (
     <Link to={"/detail/" + producto.id}>
@@ -24,7 +25,12 @@ const ProductCard = ({ producto }) => {
                 {producto.categoria.titulo}
              
               </span>
+              
             </div>
+            {
+              producto.rating ? <Rating rating={producto.rating}/>  : ''
+            }
+            
             <p className="fs-6 card-text text-secondary">
               {producto.descripcion.substring(0, 100)}
               {producto.descripcion.length > 30 ? "..." : ""}
