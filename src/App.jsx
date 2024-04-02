@@ -18,6 +18,7 @@ import AgregarCaracteristica from "./Routers/AgregarCaracteristica";
 import { PrivateRoute } from "./Routers/PrivateRoute";
 import Favs from "./Components/Favs";
 import ListarFavorito from "./Routers/ListarFavorito"
+import ListarReservas from "./Routers/ListarReservas";
 
 function App() {
  
@@ -48,7 +49,7 @@ function App() {
         <Route path="*" element={<h1>Page not found - Error 404</h1>} />
         <Route path="Fav" element={<Favs/>}/>
         <Route path="ListarFavoritos" element={<ListarFavorito/>}/>
-      
+        <Route path="/ListarReservas" element={ <ListarReservas/>}/>
         </Routes>
 
         

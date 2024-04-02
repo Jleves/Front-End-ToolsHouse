@@ -179,6 +179,7 @@ const Detail = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newReview),
+        
       });
       toast.success("Reseña creada correctamente.");
 
@@ -191,6 +192,7 @@ const Detail = () => {
       setRating(0);
       setOpinion("");
       setShowRating(false);
+      
     } catch (error) {
       console.error("Error al enviar la reseña:", error);
     }
