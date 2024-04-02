@@ -24,7 +24,7 @@ const Detail = () => {
   const [opinion, setOpinion] = useState("");
   const [reseñas, setReseñas] = useState([]);
   const [toolRating, setToolRating] = useState(0)
-  const { isLogged } = useAuth();
+  const { isLogged, token  } = useAuth();
 
  
 
@@ -144,7 +144,7 @@ const Detail = () => {
     const newReview = {
       fecha: formattedDate,
       // TODO: Debe enviarse la informacion de la reserva, posiblmente el reservaId
-      // reserva_id: producto.reserva_id.usuarioId.nombre
+      reserva_id: producto.usuarioId,
       raiting: rating,
       comentario: opinion,
       herramienta_idReseña: producto.id,
@@ -158,9 +158,10 @@ const Detail = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newReview),
+        
       });
-
-      console.log("Respuesta del servidor al agregar la reseña:", response);
+      console.log(newReview);
+      
       if (!response.ok) {
         throw new Error("Error al agregar la reseña");
       }
@@ -170,6 +171,7 @@ const Detail = () => {
       setRating(0);
       setOpinion("");
       setShowRating(false);
+      
     } catch (error) {
       console.error("Error al enviar la reseña:", error);
     }
