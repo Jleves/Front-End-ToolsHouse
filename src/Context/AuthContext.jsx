@@ -13,8 +13,8 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         if (token) {
-          const response = await fetch(`http://localhost:8080/user/profile`, {
-            method: 'GET',
+          const response = await fetch(`http://localhost:8080/User/profile`, {
+            method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -58,7 +58,6 @@ export const AuthProvider = ({ children }) => {
     token,
     isLogged,
   };
- 
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

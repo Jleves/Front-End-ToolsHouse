@@ -3,15 +3,14 @@ import { useAuth } from "../Context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getIconByName } from "../utilities/icons";
 import { Link } from "react-router-dom";
-
+import { toast } from "sonner";
 
 const Login = () => {
-  const { login, isLogged } = useAuth();
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    
     fetch("http://localhost:8080/auth/login", {
       method: "POST",
       headers: {
@@ -19,26 +18,24 @@ const Login = () => {
       },
       body: JSON.stringify({
         username: username,
-        password: password
+        password: password,
       }),
     })
       .then((response) => {
         if (response.ok) {
           return response.json();
-
         } else {
+          toast.error("Correo o contraseña incorrecta.", {});
           throw new Error("Error de autentificacion");
         }
       })
       .then((data) => {
-        
-        login( data.token,);
-       
+        login(data.token);
       })
-     .catch((error) => {
+      .catch((error) => {
         console.log("Error de autenticación:", error);
-     })
-    }
+      });
+  };
 
   return (
     <div className="flex flex-col md:flex-row mt-4">

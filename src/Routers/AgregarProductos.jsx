@@ -3,7 +3,6 @@ import { toast } from "sonner";
 import { useAuth } from "../Context/AuthContext";
 import { useParams } from "react-router-dom";
 
-
 const AgregarProductos = () => {
   const [productData, setProductData] = useState({
     id: null,
@@ -13,52 +12,48 @@ const AgregarProductos = () => {
     precio: 0,
     categoria: {
       id: "",
-      titulo: "Seleccione categoría"
+      titulo: "Seleccione categoría",
     },
     disponibilidad: "",
     caracteristicas: [],
     imageUrls: Array(1).fill({ url: "" }),
   });
-  const { isLogged, token } = useAuth();
+  const { token } = useAuth();
   const { id } = useParams();
   const [categorias, setCategorias] = useState([]);
-  const [caracteristicas, setCaracteristicas] =useState([])
+  const [caracteristicas, setCaracteristicas] = useState([]);
 
   useEffect(() => {
-    if(id) {
-      fetch(`http://localhost:8080/Herramientas/${id}`, {
-        method: 'GET',
+    if (id) {
+      fetch(`http://localhost:8080/Herramientas/list/${id}`, {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .then((res) => res.json())
-      .then((data) => {
-        setProductData({
-          id: data.id,
-          nombre: data.nombre,
-          descripcion: data.descripcion,
-          stock: data.stock,
-          precio: data.precio,
-          categoria: data.categoria,
-          caracteristicas: data.caracteristicas,
-          imageUrls: data.imagenes || [] 
-          
+        .then((res) => res.json())
+        .then((data) => {
+          setProductData({
+            id: data.id,
+            nombre: data.nombre,
+            descripcion: data.descripcion,
+            stock: data.stock,
+            precio: data.precio,
+            categoria: data.categoria,
+            caracteristicas: data.caracteristicas,
+            imageUrls: data.imagenes || [],
+          });
+          console.log(data);
         })
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error.message);
-        toast.error(
-          `Ha ocurrido un problema al obtener la Herramienta. ${error.message}`
-        );
-      })
-      
+        .catch((error) => {
+          console.error("Error:", error.message);
+          toast.error(
+            `Ha ocurrido un problema al obtener la Herramienta. ${error.message}`
+          );
+        });
     }
-  }, [id]) 
-
-   
+  }, [id]);
 
   const isFieldEmpty = (fieldName) => !productData[fieldName];
   const isAllFieldsNonEmpty = () =>
@@ -71,44 +66,42 @@ const AgregarProductos = () => {
     );
 
   const handleInputChange = (e) => {
-      const { id, value } = e.target;
-      setProductData((prevData) => ({ ...prevData, [id]: value }));
-    };
+    const { id, value } = e.target;
+    setProductData((prevData) => ({ ...prevData, [id]: value }));
+  };
 
   const handleCheckboxChange = (id, checked) => {
-    console.log('handleCheckboxChange')
-
+    console.log("handleCheckboxChange");
 
     setProductData((prevData) => {
-
-      const existeCaracteristica = prevData.caracteristicas.some(caracteristica => caracteristica.id == id);
-      console.log(prevData.caracteristicas)
-      console.log(id, checked)
-      console.log(existeCaracteristica)
+      const existeCaracteristica = prevData.caracteristicas.some(
+        (caracteristica) => caracteristica.id == id
+      );
+      console.log(prevData.caracteristicas);
+      console.log(id, checked);
+      console.log(existeCaracteristica);
       if (checked && !existeCaracteristica) {
-
-        const newCaracteristica = caracteristicas.find(caracteristica => caracteristica.id == id);
-        const result = 
-        {
+        const newCaracteristica = caracteristicas.find(
+          (caracteristica) => caracteristica.id == id
+        );
+        const result = {
           ...prevData,
-          caracteristicas: [
-            ...prevData.caracteristicas,
-            newCaracteristica
-          ]
-        }
-        console.log(result)
+          caracteristicas: [...prevData.caracteristicas, newCaracteristica],
+        };
+        console.log(result);
         return result;
       }
 
-      if(!checked && existeCaracteristica) {
-
+      if (!checked && existeCaracteristica) {
         const result = {
           ...prevData,
           caracteristicas: [
-            ...prevData.caracteristicas.filter(caracteristica => caracteristica.id != id),
-          ]
-        }
-        console.log(result)
+            ...prevData.caracteristicas.filter(
+              (caracteristica) => caracteristica.id != id
+            ),
+          ],
+        };
+        console.log(result);
         return result;
       }
 
@@ -116,14 +109,14 @@ const AgregarProductos = () => {
     });
   };
 
-const handleCheckboxInputChange = (e) => {
-  console.log('handleCheckboxInputChange')
-  console.log(e)
-  const { value, checked } = e.target;
-  console.log(value, checked)
+  const handleCheckboxInputChange = (e) => {
+    console.log("handleCheckboxInputChange");
+    console.log(e);
+    const { value, checked } = e.target;
+    console.log(value, checked);
 
-  handleCheckboxChange(value, checked);
-};
+    handleCheckboxChange(value, checked);
+  };
   const handleImageUrlChange = (index, event) => {
     const inputValue = event.target.value.trim();
 
@@ -161,55 +154,54 @@ const handleCheckboxInputChange = (e) => {
       return;
     }
 
-    if (productData.imageUrls.length < 5 ) {
-      toast.error(
-        "Mínimo 5 imagenes."
-      );
+    if (productData.imageUrls.length < 5) {
+      toast.error("Mínimo 5 imagenes.");
       return;
     }
 
-
-    if( id ) {
+    if (id) {
       console.log(id);
 
-const prueba = {
-  id: productData.id,
-  categoria: productData.categoria,
-  stock: productData.stock,
-  precio: productData.precio,
-  disponibilidad: true,
-  nombre: productData.nombre,
-  descripcion: productData.descripcion,
-  caracteristicas: productData.caracteristicas,
-  imagenes: productData.imageUrls.filter((url) => url !== ""),
-}
-console.log('Envio estoooooo ', prueba)
-
+      const prueba = {
+        id: productData.id,
+        categoria: productData.categoria,
+        stock: productData.stock,
+        precio: productData.precio,
+        disponibilidad: true,
+        nombre: productData.nombre,
+        descripcion: productData.descripcion,
+        caracteristicas: productData.caracteristicas,
+        imagenes: productData.imageUrls.filter((url) => url !== ""),
+      };
+      console.log("Envio estoooooo ", prueba);
 
       try {
-        const response = await fetch("http://localhost:8080/Herramientas", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            id: productData.id,
-            categoria: productData.categoria,
-            stock: productData.stock,
-            precio: productData.precio,
-            disponibilidad: true,
-            nombre: productData.nombre,
-            descripcion: productData.descripcion,
-            caracteristicas: productData.caracteristicas,
-            imagenes: productData.imageUrls.filter((url) => url !== ""),
-          }),
-        });
-  
+        const response = await fetch(
+          "http://localhost:8080/Herramientas/update",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              id: productData.id,
+              categoria: productData.categoria,
+              stock: productData.stock,
+              precio: productData.precio,
+              disponibilidad: true,
+              nombre: productData.nombre,
+              descripcion: productData.descripcion,
+              caracteristicas: productData.caracteristicas,
+              imagenes: productData.imageUrls.filter((url) => url !== ""),
+            }),
+          }
+        );
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-  
+
         const responseData = await response.text();
         console.log("Success:", responseData);
         toast.success("Se ha actualizado exitosamente el producto!");
@@ -220,30 +212,33 @@ console.log('Envio estoooooo ', prueba)
           error.message
         );
       }
-    }else {
+    } else {
       try {
-        const response = await fetch("http://localhost:8080/Herramientas", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            categoria: productData.categoria,
-            stock: productData.stock,
-            precio: productData.precio,
-            disponibilidad: true,
-            nombre: productData.nombre,
-            descripcion: productData.descripcion,
-            caracteristicas:productData.caracteristicas,
-            imagenes: productData.imageUrls.filter((url) => url !== ""),
-          }),
-        });
-  
+        const response = await fetch(
+          "http://localhost:8080/Herramientas/create",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              categoria: productData.categoria,
+              stock: productData.stock,
+              precio: productData.precio,
+              disponibilidad: true,
+              nombre: productData.nombre,
+              descripcion: productData.descripcion,
+              caracteristicas: productData.caracteristicas,
+              imagenes: productData.imageUrls.filter((url) => url !== ""),
+            }),
+          }
+        );
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-  
+
         const responseData = await response.json();
         console.log("Success:", responseData);
         toast.success("Se ha agregado exitosamente el producto!");
@@ -255,22 +250,19 @@ console.log('Envio estoooooo ', prueba)
         );
       }
     }
-
-    
   };
 
   useEffect(() => {
-    fetch("http://localhost:8080/Categorias", {
+    fetch("http://localhost:8080/Categorias/list", {
       method: "GET",
 
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
       .then((responseData) => {
-       
         const categorias = responseData.map((categoria) => ({
           id: categoria.id,
           titulo: categoria.titulo,
@@ -282,38 +274,26 @@ console.log('Envio estoooooo ', prueba)
   }, []);
   console.log(categorias);
 
-   useEffect(() => {
-     fetch("http://localhost:8080/Caracteristicas", {
-       method: "GET",
+  useEffect(() => {
+    fetch("http://localhost:8080/Caracteristicas/list", {
+      method: "GET",
 
-       headers: {
-         "Content-Type": "application/json",
-         'Authorization': `Bearer ${token}`
-       },
-     })
-       .then((res) => res.json())
-       .then((responseData) => {
-        
-         const caracteristicas = responseData.map((caracteristica) => ({
-           id: caracteristica.id,
-           titulo: caracteristica.titulo,
-           icono: caracteristica.icono,
-         }));
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((responseData) => {
+        const caracteristicas = responseData.map((caracteristica) => ({
+          id: caracteristica.id,
+          titulo: caracteristica.titulo,
+          icono: caracteristica.icono,
+        }));
 
-         setCaracteristicas(caracteristicas);
-       });
-   }, []);
-
-   console.log(caracteristicas);
-
-  // const caracteristicas = [
-  //   { id: 1, titulo: "Electrico", icono: "bucket", },
-  //   { id: 2, titulo: "Manual", icono: "hammer", },
-  //   { id: 3, titulo: "Carga rapida", icono: "carBattery", },
-  //   { id: 4, titulo: "Repuestos", icono: "paintBrush", },
-  //   { id: 5, titulo: "Facil agarre", icono: "trowel", },
-  //   { id: 6, titulo: "facil Armado", icono: "powerOff", },
-  // ];
+        setCaracteristicas(caracteristicas);
+      });
+  }, []);
 
   return (
     <div className="mx-auto p-8 w-full">
@@ -345,7 +325,7 @@ console.log('Envio estoooooo ', prueba)
               />
             </div>
             <br />
-           
+
             <h5 className="text-white text-lg font-semibold mb-2">
               Informacion Adicional
             </h5>
@@ -383,31 +363,39 @@ console.log('Envio estoooooo ', prueba)
               >
                 <option hidden>Seleccionar...</option>
                 {categorias.map((categoria) => (
-              <option key={categoria.id} value={categoria.id}>{categoria.titulo}</option>
-                 ))}
+                  <option key={categoria.id} value={categoria.id}>
+                    {categoria.titulo}
+                  </option>
+                ))}
               </select>
             </div>
 
             <br />
-            
-            <h5 className="text-white text-lg font-semibold mb-2">Características</h5>
+
+            <h5 className="text-white text-lg font-semibold mb-2">
+              Características
+            </h5>
             <div className="bg-colorSecundario text-white rounded-xl p-4">
-             <label>Opciones:</label>
+              <label>Opciones:</label>
               {caracteristicas.map((caracteristica) => (
-              <div key={caracteristica.id}>
-                <input
-                type="checkbox"
-                id={`opcion${caracteristica.id}`}
-                name="caracteristicas"
-                value={caracteristica.id}
-                checked={productData.caracteristicas.map(item => item.id).includes(caracteristica.id)}
-                onChange={handleCheckboxInputChange}
-                />
-                <label htmlFor={`opcion${caracteristica.id}`}>{caracteristica.titulo}</label>
-              </div>
-               ))}
+                <div key={caracteristica.id}>
+                  <input
+                    type="checkbox"
+                    id={`opcion${caracteristica.id}`}
+                    name="caracteristicas"
+                    value={caracteristica.id}
+                    checked={productData.caracteristicas
+                      .map((item) => item.id)
+                      .includes(caracteristica.id)}
+                    onChange={handleCheckboxInputChange}
+                  />
+                  <label htmlFor={`opcion${caracteristica.id}`}>
+                    {caracteristica.titulo}
+                  </label>
+                </div>
+              ))}
             </div>
-            
+
             <h5 className="text-white text-lg font-semibold mb-2">Imagenes</h5>
             <div className="bg-colorSecundario text-white rounded-xl p-4">
               {productData.imageUrls.map((imgObj, index) => (
@@ -447,7 +435,7 @@ console.log('Envio estoooooo ', prueba)
             </div>
           </div>
         </div>
-        
+
         <div className="flex justify-center gap-4 mt-4">
           <button
             type="button"

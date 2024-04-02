@@ -6,15 +6,15 @@ import { getIconByName } from "./../utilities/icons";
 import { useAuth } from "../Context/AuthContext";
 
 const iconNames = [
-  "wrench", 
-  "car", 
-  "user", 
-  "hammer", 
-  "ruler", 
-  "trowel", 
-  "leaf", 
-  "water", 
-  "hotel", 
+  "wrench",
+  "car",
+  "user",
+  "hammer",
+  "ruler",
+  "trowel",
+  "leaf",
+  "water",
+  "hotel",
   "houseMedical",
   "helmetSafety",
   "explosion",
@@ -30,7 +30,7 @@ const iconNames = [
   "toolbox",
   "dumpster",
   "paintBrush",
-  "plug"
+  "plug",
 ];
 
 const AgregarCaracteristica = () => {
@@ -41,10 +41,10 @@ const AgregarCaracteristica = () => {
     titulo: "",
     icono: "",
   });
-  const { isLogged, token } = useAuth();
+  const { token } = useAuth();
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8080/Caracteristicas/${id}`, {
+      fetch(`http://localhost:8080/Caracteristicas/list/${id}`, {
         method: "GET",
         header: {
           "Content-Type": "application/json",
@@ -67,7 +67,7 @@ const AgregarCaracteristica = () => {
           );
         });
     }
-  }, [id]);
+  }, [token, id]);
 
   const isFieldEmpty = (fieldName) => !caracteristicaData[fieldName];
   const isAllFieldsNonEmpty = () =>
@@ -96,18 +96,21 @@ const AgregarCaracteristica = () => {
       console.log(id);
       try {
         console.log(caracteristicaData);
-        const response = await fetch(`http://localhost:8080/Caracteristicas`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            id: caracteristicaData.id,
-            titulo: caracteristicaData.titulo,
-            icono: caracteristicaData.icono,
-          }),
-        });
+        const response = await fetch(
+          `http://localhost:8080/Caracteristicas/update`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              id: caracteristicaData.id,
+              titulo: caracteristicaData.titulo,
+              icono: caracteristicaData.icono,
+            }),
+          }
+        );
         console.log(response);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -126,18 +129,21 @@ const AgregarCaracteristica = () => {
     } else {
       try {
         console.log(caracteristicaData);
-        const response = await fetch("http://localhost:8080/Caracteristicas", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            id: caracteristicaData.id,
-            titulo: caracteristicaData.titulo,
-            icono: caracteristicaData.icono,
-          }),
-        });
+        const response = await fetch(
+          "http://localhost:8080/Caracteristicas/create",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              id: caracteristicaData.id,
+              titulo: caracteristicaData.titulo,
+              icono: caracteristicaData.icono,
+            }),
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);

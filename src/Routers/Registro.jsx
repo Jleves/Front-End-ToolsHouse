@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Login from "./Login";
 import { useAuth } from "../Context/AuthContext";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getIconByName } from "../utilities/icons";
+import { toast } from "sonner";
 
 const Resgistro = () => {
   const { login } = useAuth();
@@ -71,13 +70,13 @@ const Resgistro = () => {
           console.log("Registro exitoso:", data);
         })
         .catch((error) => {
-          console.log("Error al registrar al usuario:", error);
-          setErrorGeneral("Hubo un error al registar al usuario");
+          toast.error("Hubo un error al registar al usuario.", {});
+          setErrorGeneral("Hubo un error al registar al usuario", error);
         });
       console.log("Datos del formulario:", formulario);
     } else {
       setErrores(erroresValidacion);
-      setErrorGeneral("verifica los campos marcados en rojo.");
+      setErrorGeneral("Verifica los campos marcados en rojo.");
     }
   };
 

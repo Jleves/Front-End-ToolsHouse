@@ -8,6 +8,7 @@ import {
   faWrench,
   faHammer,
   faRuler,
+  faCalendar,
   faTrowel,
   faToolbox,
   faDumpster,
@@ -43,19 +44,17 @@ import {
   faPowerOff,
   faCircleUser,
   faHeart,
-  faStar
-  } from "@fortawesome/free-solid-svg-icons";
-
-  
+  faStar,
+} from "@fortawesome/free-solid-svg-icons";
 
 const iconMap = {
-  
   heart: faHeart,
   star: faStar,
   wrench: faWrench,
   signOut: faArrowRightFromBracket,
   back: faChevronLeft,
   images: faImages,
+  calendar: faCalendar,
   car: faCar,
   user: faUser,
   hammer: faHammer,
