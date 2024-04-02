@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 const Login = () => {
-  const { login, isLogged } = useAuth();
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 

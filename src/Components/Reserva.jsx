@@ -33,8 +33,8 @@ const Reserva = ({ precio, producto }) => {
   };
 
   const productoData = {
-    fechaInicioReserva: "",
-    fechaFinalReserva: "",
+    fechaInicioReserva: "2024-04-10",
+    fechaFinalReserva: "2024-04-16",
   };
 
   useEffect(() => {
@@ -48,9 +48,7 @@ const Reserva = ({ precio, producto }) => {
   }, []);
 
   useEffect(() => {
-    // Aquí tomamos el token que está almacenado en localStorage
     const storedToken = localStorage.getItem("token");
-
     if (storedToken) {
       setToken(storedToken);
     }
@@ -60,7 +58,7 @@ const Reserva = ({ precio, producto }) => {
     const fetchData = async () => {
       try {
         if (token) {
-          const response = await fetch(`http://localhost:8080/user/profile`, {
+          const response = await fetch(`http://localhost:8080/User/profile`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -77,6 +75,7 @@ const Reserva = ({ precio, producto }) => {
         console.error("Error fetching user data:", error);
       }
     };
+
     fetchData();
   }, [token]);
 
@@ -164,7 +163,7 @@ const Reserva = ({ precio, producto }) => {
         usuarioRole: data.role,
       };
 
-      const response = await fetch("http://localhost:8080/Reservas", {
+      const response = await fetch("http://localhost:8080/Reservas/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -178,16 +177,19 @@ const Reserva = ({ precio, producto }) => {
         }),
       });
 
-      console.log(herramientaId);
-
       if (!response.ok) {
         toast.error(
           `Error al realizar la reserva. Por favor, intenta de nuevo más tarde ${response.status}.`
         );
       }
+
+      // Reservation successful, show success message or perform further actions
       toast.success("Reserva realizada con éxito.");
+
+      // Close the confirmation modal after successful reservation
       closeConfirmation();
     } catch (error) {
+      console.error("Error making reservation:", error);
       toast.error(
         "Error al realizar la reserva. Por favor, intenta de nuevo más tarde."
       );

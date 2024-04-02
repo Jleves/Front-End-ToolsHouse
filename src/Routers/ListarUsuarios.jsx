@@ -7,7 +7,7 @@ const ListarUsuarios = () => {
   const { token } = useAuth();
 
   useEffect(() => {
-    fetch("http://localhost:8080/user", {
+    fetch("http://localhost:8080/User/list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -29,14 +29,17 @@ const ListarUsuarios = () => {
     try {
       console.log("userId:", userId);
       console.log("newRole:", newRole);
-      await fetch(`http://localhost:8080/user/${userId}/usuarioRole`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ usuarioRole: newRole }),
-      });
+      await fetch(
+        `http://localhost:8080/User/updateRole/${userId}/usuarioRole`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ usuarioRole: newRole }),
+        }
+      );
       console.log("Update successful!");
       const updatedUsers = users.map((user) => {
         if (user.id === userId) {

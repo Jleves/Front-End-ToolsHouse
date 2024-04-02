@@ -6,11 +6,11 @@ import { useAuth } from "../Context/AuthContext";
 
 const ListarCaracteristicas = () => {
   const [Caracteristicas, setCaracteristicas] = useState([]);
-  const { isLogged, token } = useAuth();
-  useEffect(() => {
-    fetch("http://localhost:8080/Caracteristicas", {
-      method: "GET",
 
+  const { token } = useAuth();
+  useEffect(() => {
+    fetch("http://localhost:8080/Caracteristicas/list", {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -27,7 +27,7 @@ const ListarCaracteristicas = () => {
 
         setCaracteristicas(Caracteristicas);
       });
-  }, []);
+  }, [token]);
 
   const handleDelete = async (id) => {
     if (
@@ -35,7 +35,7 @@ const ListarCaracteristicas = () => {
     ) {
       try {
         const response = await fetch(
-          `http://localhost:8080/Caracteristicas/${id}`,
+          `http://localhost:8080/Caracteristicas/delete/${id}`,
           {
             method: "DELETE",
           }
@@ -45,9 +45,9 @@ const ListarCaracteristicas = () => {
           throw new Error(`HTTP error: ${response.status}`);
         }
 
-        setProductos((prevProductos) =>
-          prevProductos.filter((prod) => prod.id !== id)
-        );
+        // setProductos((prevProductos) =>
+        //   prevProductos.filter((prod) => prod.id !== id)
+        // );
 
         alert("La caracteristicas se eliminó correctamente.");
       } catch (error) {

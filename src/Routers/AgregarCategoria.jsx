@@ -5,7 +5,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getIconByName } from "./../utilities/icons";
 import { useAuth } from "../Context/AuthContext";
 
-const iconNames = ["wrench", "car", "user", "hammer", "ruler", "trowel"];
+const iconNames = [
+  "wrench",
+  "car",
+  "user",
+  "hammer",
+  "ruler",
+  "trowel",
+  "leaf",
+  "water",
+  "hotel",
+  "houseMedical",
+  "helmetSafety",
+  "explosion",
+  "carBattery",
+  "batteryFull",
+  "powerOff",
+  "tableList",
+  "fire",
+  "images",
+  "tree",
+  "mapMarker",
+  "mapSigns",
+  "toolbox",
+  "dumpster",
+  "paintBrush",
+  "plug",
+];
 
 const AgregarCategoria = () => {
   const { id } = useParams();
@@ -15,11 +41,11 @@ const AgregarCategoria = () => {
     titulo: "",
     icono: "",
   });
-  const { isLogged, token } = useAuth();
+  const { token } = useAuth();
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8080/Categorias/${id}`, {
+      fetch(`http://localhost:8080/Categorias/list/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +68,7 @@ const AgregarCategoria = () => {
           );
         });
     }
-  }, [id]);
+  }, [id, token]);
 
   const isFieldEmpty = (fieldName) => !categoryData[fieldName];
   const isAllFieldsNonEmpty = () =>
@@ -71,18 +97,21 @@ const AgregarCategoria = () => {
       console.log(id);
       try {
         console.log(categoryData);
-        const response = await fetch(`http://localhost:8080/Categorias`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            id: categoryData.id,
-            titulo: categoryData.titulo,
-            icono: categoryData.icono,
-          }),
-        });
+        const response = await fetch(
+          `http://localhost:8080/Categorias/update`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              id: categoryData.id,
+              titulo: categoryData.titulo,
+              icono: categoryData.icono,
+            }),
+          }
+        );
         console.log(response);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -101,18 +130,21 @@ const AgregarCategoria = () => {
     } else {
       try {
         console.log(categoryData);
-        const response = await fetch("http://localhost:8080/Categorias", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            id: categoryData.id,
-            titulo: categoryData.titulo,
-            icono: categoryData.icono,
-          }),
-        });
+        const response = await fetch(
+          "http://localhost:8080/Categorias/create",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              id: categoryData.id,
+              titulo: categoryData.titulo,
+              icono: categoryData.icono,
+            }),
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);

@@ -11,7 +11,7 @@ const ListarCategorias = () => {
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/Categorias", {
+    fetch("http://localhost:8080/Categorias/list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -33,13 +33,16 @@ const ListarCategorias = () => {
   useEffect(() => {
     const fetchListarProducto = async () => {
       try {
-        const response = await fetch("http://localhost:8080/Herramientas", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "http://localhost:8080/Herramientas/list",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error("Error al obtener las Herramientas");
         }
@@ -82,13 +85,16 @@ const ListarCategorias = () => {
 
     if (window.confirm("¿Estás seguro que quieres eliminar esta categoria?")) {
       try {
-        const response = await fetch(`http://localhost:8080/Categorias/${id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `http://localhost:8080/Categorias/delete/${id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
