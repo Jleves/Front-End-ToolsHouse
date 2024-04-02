@@ -6,31 +6,40 @@ import { Link } from "react-router-dom";
 
 const ListarProductos = () => {
   const [productos, setProductos] = useState([]);
-  const { isLogged, token } = useAuth();
+  const { token } = useAuth();
   useEffect(() => {
     const fetchListarProducto = async () => {
       try {
-        const response = await fetch("http://localhost:8080/Herramientas", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "http://localhost:8080/Herramientas/list",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!response.ok) {
           throw new Error("Error al obtener las Herramientas");
         }
         const responseData = await response.json();
         const productosMapped = responseData.map((producto) => ({
-            id: producto.id,
-            nombre: producto.nombre,
-            descripcion: producto.descripcion,
-            precio: producto.precio,
-            categoria: producto.categoria?.titulo, 
-            caracteristicas: producto.caracteristicas ? producto.caracteristicas.map((caracteristica) => caracteristica.titulo) :[],
-            imagenes: producto.imagenes ? producto.imagenes.map((imagen) => imagen.url) : [],
+          id: producto.id,
+          nombre: producto.nombre,
+          descripcion: producto.descripcion,
+          precio: producto.precio,
+          categoria: producto.categoria?.titulo,
+          caracteristicas: producto.caracteristicas
+            ? producto.caracteristicas.map(
+                (caracteristica) => caracteristica.titulo
+              )
+            : [],
+          imagenes: producto.imagenes
+            ? producto.imagenes.map((imagen) => imagen.url)
+            : [],
         }));
-  
+
         setProductos(productosMapped);
         console.log(productosMapped);
       } catch (error) {
@@ -40,12 +49,11 @@ const ListarProductos = () => {
     fetchListarProducto();
   }, []);
 
-  
   const handleDelete = async (id) => {
     if (window.confirm("¿Estás seguro que quieres eliminar este producto?")) {
       try {
         const response = await fetch(
-          `http://localhost:8080/Herramientas/${id}`,
+          `http://localhost:8080/Herramientas/delete/${id}`,
           {
             method: "DELETE",
           }
@@ -87,14 +95,11 @@ const ListarProductos = () => {
             <td className="py-2">{producto.categoria}</td>
             <td className="py-2 flex gap-8">
               <Link to={`/admin/productos/agregar/${producto.id}`}>
-              <button
-                className="bg-colorPrimario hover:bg-colorPrimarioHover transition-all text-white px-2 py-1 rounded-lg"
-                
-              >
-                <FontAwesomeIcon icon={getIconByName("pencil")} size="lg" />
-              </button>
+                <button className="bg-colorPrimario hover:bg-colorPrimarioHover transition-all text-white px-2 py-1 rounded-lg">
+                  <FontAwesomeIcon icon={getIconByName("pencil")} size="lg" />
+                </button>
               </Link>
-              
+
               <button
                 className="bg-red-500 hover:bg-red-700 transition-all text-white px-2 py-1 rounded-lg"
                 onClick={() => handleDelete(producto.id)}

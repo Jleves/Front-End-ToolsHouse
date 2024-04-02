@@ -1,11 +1,13 @@
+import PropTypes from "prop-types";
+
 const Politicas = ({ onClose }) => {
   return (
-    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
-      <div className="bg-white p-4 rounded-lg w-4/5 max-w-xl overflow-y-auto max-h-90 mt-14">
-        <h2 className="text-2xl font-bold mb-4  underline decoration-solid">
+    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-80">
+      <div className="bg-white p-8 rounded-lg w-4/5 max-w-xl overflow-y-h max-h-90 mt-14">
+        <h2 className="text-2xl font-bold mb-4 underline decoration-solid">
           Políticas de Reserva
         </h2>
-        <ul className="mb-4">
+        <ul className="mb-4 flex flex-col gap-2">
           <li>
             <strong>1. Reservas:</strong> Las reservas solo se pueden hacer en
             línea, requieren un registro en nuestra plataforma y deben
@@ -28,15 +30,21 @@ const Politicas = ({ onClose }) => {
           </li>
         </ul>
 
-        <button
-          onClick={onClose}
-          className=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Cerrar
-        </button>
+        <div className="flex justify-end">
+          <button
+            onClick={onClose}
+            className=" bg-blue-500 w-full mt-4 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Cerrar
+          </button>
+        </div>
       </div>
     </div>
   );
+};
+
+Politicas.propTypes = {
+  onClose: PropTypes.number.isRequired,
 };
 
 export default Politicas;
