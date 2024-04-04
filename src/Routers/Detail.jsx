@@ -11,7 +11,6 @@ import Favs from "../Components/Favs";
 import { toast } from "sonner";
 import Rating from "../Components/Rating";
 import PropTypes from "prop-types";
-
 import Reserva from "../Components/Reserva";
 
 const Detail = () => {
@@ -63,15 +62,54 @@ const Detail = () => {
         console.error("Error haciendo el fetch:", error);
       }
     };
-    fetchReseñasPorHerramienta();
+
+  
+    fetchResenas()
+    
     fetchProducto();
   }, [id]);
+
+  const fetchResenas = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/Reseñas/herramienta/${id}`);
+      if (!response.ok) {
+        throw new Error("Error al obtener las reseñas");
+      }
+      const data = await response.json();
+      
+      setReseñas(data) 
+      getToolRating(data)
+      return data;
+    } catch (error) {
+      console.error("Error al obtener las reseñas:", error);
+    }
+    
+  };
+
+  
+
+  const getToolRating = (resenas) => {
+    const count = resenas.length;
+    let sumaRating = 0;
+    if (count === 0) {
+      return;
+    }
+    resenas.map((resena) => {
+      sumaRating += resena?.raiting || 0;
+    });
+    if (sumaRating === 0) {
+      return;
+    }
+    const rating = sumaRating / count;
+    setToolRating(rating);
+    
+  };
 
   const handleRatingClick = () => {
     if (isLogged) {
       setShowRating(true);
     } else {
-      toast("Tenes que loguearte para agregar una reseña.", {
+      toast("Tienes que loguearte para agregar una reseña.", {
         classNames: {
           actionButton: "!bg-colorPrimario",
         },
@@ -83,21 +121,53 @@ const Detail = () => {
     }
   };
 
-  const fetchReseñasPorHerramienta = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/Reseñas/list");
-      if (!response.ok) {
-        throw new Error("Error al obtener las reseñas");
-      }
-      const data = await response.json();
+  const handleRatingChange = (value) => {
+    setRating(value);
+  };
 
-      const resenasHerramienta = data.filter(
-        (resena) => resena.id === Number(id)
-      );
-      setReseñas([...resenasHerramienta]);
-      getToolRating([...resenasHerramienta]);
+  const handleOpinionChange = (event) => {
+    setOpinion(event.target.value);
+  };
+
+  const handleSendReview = async () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+    const newReview = {
+      fecha: formattedDate,
+      autor: data.nombre,
+      raiting: rating,
+      comentario: opinion,
+      herramienta_idReseña: producto.id,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/Reseñas/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newReview),
+        
+      });
+      toast.success("Reseña creada correctamente.");
+
+      if (!response.ok) {
+        throw new Error("Error al agregar la reseña");
+      }
+
+       await fetchResenas();
+
+      setRating(0);
+      setOpinion("");
+      setShowRating(false);
+      
     } catch (error) {
-      console.error("Error al obtener las reseñas:", error);
+      console.error("Error al enviar la reseña:", error);
     }
   };
 
@@ -130,73 +200,6 @@ const Detail = () => {
     fetchData();
   }, [token]);
 
-  const getToolRating = (resenas) => {
-    const count = resenas.length;
-    let sumaRating = 0;
-    if (count === 0) {
-      return;
-    }
-    resenas.map((resena) => {
-      sumaRating += resena?.raiting || 0;
-    });
-    if (sumaRating === 0) {
-      return;
-    }
-    const rating = sumaRating / count;
-    setToolRating(rating);
-  };
-
-  const handleRatingChange = (value) => {
-    setRating(value);
-  };
-
-  const handleOpinionChange = (event) => {
-    setOpinion(event.target.value);
-  };
-
-  const handleSendReview = async () => {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-    const day = String(currentDate.getDate()).padStart(2, "0");
-
-    const formattedDate = `${year}-${month}-${day}`;
-
-    const newReview = {
-      fecha: formattedDate,
-      // TODO: Debe enviarse la informacion de la reserva, posiblmente el reservaId
-      // reserva_id: reserva.id
-      autor: data.nombre,
-      raiting: rating,
-      comentario: opinion,
-      herramienta_idReseña: producto.id,
-    };
-
-    try {
-      const response = await fetch("http://localhost:8080/Reseñas/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newReview),
-        
-      });
-      toast.success("Reseña creada correctamente.");
-
-      if (!response.ok) {
-        throw new Error("Error al agregar la reseña");
-      }
-
-      await fetchReseñasPorHerramienta();
-
-      setRating(0);
-      setOpinion("");
-      setShowRating(false);
-      
-    } catch (error) {
-      console.error("Error al enviar la reseña:", error);
-    }
-  };
 
   // Politicas
   const openPolicy = () => {
@@ -313,7 +316,7 @@ const Detail = () => {
             <Reserva precio={producto.precio} producto={producto} />
           </div>
 
-          {/* <div className="col-12 col-md-6 col-lg-3 p-2 md:p-4 border rounded-lg shadow-lg mt-2">
+          <div className="col-12 col-md-6 col-lg-3 p-2 md:p-4 border rounded-lg shadow-lg mt-2">
             <ul className="grid grid-cols-3 gap-4">
               {producto.caracteristicas.map((caracteristica) => (
                 <li
@@ -328,7 +331,7 @@ const Detail = () => {
                 </li>
               ))}
             </ul>
-          </div> */}
+          </div> 
         </div>
       </div>
 
@@ -342,6 +345,7 @@ const Detail = () => {
           Danos tu Opinion
         </button>
       </div>
+
       <div className="flex flex-col md:flex-row gap-4 px-4">
         {showRating && isLogged && (
           <div className="flex flex-col gap-4 px-4">
@@ -378,7 +382,9 @@ const Detail = () => {
           </div>
         )}
       </div>
+
     </div>
+    
   );
 };
 

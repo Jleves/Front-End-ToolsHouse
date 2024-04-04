@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import PropTypes from "prop-types";
 
+
 const Products = ({ selectedCategory }) => {
   const [productos, setProductos] = useState([]);
   const [start, setStart] = useState(0);
@@ -25,7 +26,7 @@ const Products = ({ selectedCategory }) => {
 
         const responseData = await response.json();
 
-        const resenas = await fetchResenas();
+         const resenas = await fetchResenas();
         const productosApiFake = Array.isArray(responseData)
           ? responseData.map((producto) => ({
               id: producto.id,
@@ -34,13 +35,14 @@ const Products = ({ selectedCategory }) => {
               precio: producto.precio,
               categoria: producto.categoria,
               imagenes: producto.imagenes.map((imagen) => imagen.url),
-              rating: getToolRating(producto.id, resenas),
+              raiting: getToolRating(producto.id, resenas),
             }))
           : [];
-
+            // console.log(responseData);
         const ordenRandom = getRandomOrder(productosApiFake);
 
         setProductos(ordenRandom);
+
       } catch (error) {
         console.log(error.message);
       }
@@ -50,12 +52,12 @@ const Products = ({ selectedCategory }) => {
 
   const fetchResenas = async () => {
     try {
-      const response = await fetch("http://localhost:8080/Reseñas/list");
+      const response = await fetch('http://localhost:8080/Reseñas/list');
       if (!response.ok) {
         throw new Error("Error al obtener las reseñas");
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       return data;
     } catch (error) {
       console.error("Error al obtener las reseñas:", error);
@@ -64,23 +66,26 @@ const Products = ({ selectedCategory }) => {
 
   const getToolRating = (idHerramienta, resenas) => {
     const resenasPorHerramienta = resenas.filter(
-      (resena) => resena.herramienta_idReseña?.id === Number(idHerramienta)
+      (resena) => resena.id === Number(idHerramienta)
     );
     const count = resenasPorHerramienta.length;
     let sumaRating = 0;
-
+      
+      //  console.log(resenasPorHerramienta);
     if (count === 0) {
       return sumaRating;
     }
     resenasPorHerramienta.map((resena) => {
       sumaRating += resena?.raiting || 0;
     });
+    
     if (sumaRating === 0) {
       return 0;
     }
     const rating = sumaRating / count;
     return rating;
   };
+  
 
   const getRandomOrder = (array) => {
     return array.reduce((result, currentValue) => {
@@ -95,7 +100,6 @@ const Products = ({ selectedCategory }) => {
 
   useEffect(() => {
     setStart((currentPage - 1) * pageSize);
-    console.log(start);
   }, [currentPage]);
 
   const handleNextClick = () => {

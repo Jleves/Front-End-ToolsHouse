@@ -45,10 +45,6 @@ const ListarCaracteristicas = () => {
           throw new Error(`HTTP error: ${response.status}`);
         }
 
-        // setProductos((prevProductos) =>
-        //   prevProductos.filter((prod) => prod.id !== id)
-        // );
-
         alert("La caracteristicas se eliminó correctamente.");
       } catch (error) {
         console.error("Error:", error.message);

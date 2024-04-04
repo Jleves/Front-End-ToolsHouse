@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../Context/AuthContext';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getIconByName } from '../utilities/icons';
 
 
 const ListarReservas = () => {
@@ -26,22 +27,37 @@ const ListarReservas = () => {
      .catch((error) => console.log('Error: ', error));
    }, [token]);
 
-//    useEffect(() => {
-//      fetch("http://localhost:8080/Reservas/list", {
-//          method: 'GET',
-//          headers:{
-//              'Content-Type': 'application/json',
-//              'Authorization': `Bearer ${token}`
-//          }
-//      })
-//      .then((response)=> response.json())
-//      .then((data)=>{setReservas(data)
-//      console.log(data);} )
-//      .catch((error)=> console.log('Error: ', error));
-  
-//  },[] );
 
-  
+   const handleDelete = async (id) => {
+    if (
+      window.confirm("¿Estás seguro que quieres eliminar esta Reserva?")
+    ) {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/Reservas/delete/${id}`,
+          {
+            method: "DELETE",
+            headers:{
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        alert("La Reserva se eliminó correctamente.");
+      } catch (error) {
+        console.error("Error:", error.message);
+        alert("Hubo un problema al eliminar la Reserva.");
+      }
+    } else {
+      alert("Eliminacion cancelada.");
+    }
+  };
+
   const formatDate = (fecha) => {
     const date = new Date(fecha);
     const year = date.getFullYear();
@@ -68,7 +84,14 @@ const ListarReservas = () => {
           <td className="py-2">{ reserva.herramientaId?.nombre}</td>
           <td className="py-2">{formatDate(reserva.fechaAlquiler)}</td>
           <td className="py-2">{formatDate(reserva.fechaDevolucion)}</td>
-          
+          <td className="px-6 py-4 flex gap-x-2">
+                <button
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-400 transition-all"
+                  onClick={() => handleDelete(reserva.id)}
+                >
+                  <FontAwesomeIcon icon={getIconByName("trash")} size="lg" />
+                </button>
+              </td>
         </tr>
       ))}
     </tbody>

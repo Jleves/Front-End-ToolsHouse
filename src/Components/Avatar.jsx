@@ -38,7 +38,7 @@ const Avatar = () => {
 
           const responseData = await response.json();
           setData(responseData);
-          console.log(data);
+          
           setMostrarBoton(responseData.role !== "USER");
         }
       } catch (error) {
