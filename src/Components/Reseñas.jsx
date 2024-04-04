@@ -9,7 +9,7 @@ const Reseñas = ({ reseñasProp }) => {
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-
+  console.log(reseñasProp);
   return (
     <>
       {/* <p>Total amount of stars: {totalStars}</p> */}

@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 // import Favs from "./Favs";
 import Rating from "./Rating";
 
-const ProductCard = ({ producto }) => {
+const ProductCard = ({ producto, }) => {
+   console.log(producto);
   return (
     <Link to={"/detail/" + producto.id}>
       <div className="card h-full bg-white hover:bg-slate-100 transition-all p-6 rounded-2xl">
@@ -27,7 +28,8 @@ const ProductCard = ({ producto }) => {
                   {producto.categoria.titulo}
                 </span>
               </div>
-              {producto.rating ? <Rating rating={producto.rating} /> : ""}
+              {producto.raiting ? <Rating rating={producto.raiting} /> : ""}
+              
             </div>
 
             <p className="fs-6 card-text text-secondary">
