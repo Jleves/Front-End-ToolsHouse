@@ -76,7 +76,7 @@ const Detail = () => {
         throw new Error("Error al obtener las reseñas");
       }
       const data = await response.json();
-      console.log(data);
+      
       setReseñas(data) 
       getToolRating(data)
       return data;
