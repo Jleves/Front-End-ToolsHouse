@@ -213,12 +213,13 @@ const Detail = () => {
           <Link to="/" className="text-colorPrimario px-4 py-2 rounded">
             <FontAwesomeIcon icon={getIconByName("back")} size="lg" /> Volver
           </Link>
+          <Favs />
         </div>
       </div>
 
       <div className="col-12 px-2">
         {/* Imagenes */}
-        <div className="flex justify-center gap-2 flex-col md:flex-row mb-2 p-4">
+        <div className="flex justify-center gap-2 flex-col md:flex-row mb-2 p-2">
           <div className="!rounded-l-3xl p-8 shadow w-full h-[515px] bg-white">
             <img
               src={producto.imagenes[0]}
@@ -268,19 +269,11 @@ const Detail = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="flex">
-                <button className="flex justify-center items-center gap-2 absolute bottom-6 right-6 border text-black border-black bg-white px-4 py-2 rounded-2xl hover:bg-colorPrimarioHover hover:text-white hover:border-colorPrimarioHover transition-all">
-                  <FontAwesomeIcon icon={getIconByName("images")} size="lg" />
-                  <span className="font-semibold">Ver más</span>
-                </button>
-                <Favs />
-              </div>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between py-6 px-4 gap-8">
+        <div className="flex flex-col md:flex-row justify-between py-6 px-2 gap-8">
           <div className="md:w-6/12 flex flex-col justify-between mr-6">
             <div>
               <div className="flex items-center mb-2 gap-4">

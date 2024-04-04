@@ -12,7 +12,7 @@ const ProductCard = ({ producto }) => {
           style={{ height: "150px" }}
         >
           <img
-            src={producto.imagenes[1]}
+            src={producto.imagenes[0]}
             className="h-full w-full"
             alt={producto.nombre}
             style={{ objectFit: "contain" }}

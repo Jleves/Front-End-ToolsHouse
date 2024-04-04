@@ -115,42 +115,41 @@ const ListarCategorias = () => {
   };
 
   return (
-    <div className="relative overflow-x-auto shadow-md w-full rounded-lg">
-      <table className="w-full text-sm text-left text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+    <div className="relative overflow-x-hidden shadow-md w-full rounded-lg">
+      <table className=" table w-full my-4 ml-8 text-left text-black">
+        <thead className=" text-black">
           <tr>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="py-3">
               Id
             </th>
-            <th scope="col" className="px-6 py-3">
-              titulo
+            <th scope="col" className="py-3">
+              Titulo
             </th>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="py-3">
               Icono
             </th>
-            <th scope="col" className="px-6 py-3"></th>
+            <th scope="col" className="py-3">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody>
           {categorias.map((categoria) => (
-            <tr
-              key={categoria.id}
-              className={`odd:bg-white even:bg-gray-50 border-b`}
-            >
+            <tr key={categoria.id} className={`border-b`}>
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                className="py-2 font-medium text-gray-900 whitespace-nowrap"
               >
                 {categoria.id}
               </th>
-              <td className="px-6 py-4">{categoria.titulo}</td>
-              <td className="px-6 py-4 text-colorPrimario">
+              <td className=" py-2">{categoria.titulo}</td>
+              <td className=" py-2 text-colorPrimario">
                 <FontAwesomeIcon
                   icon={getIconByName(categoria.icono)}
                   size="lg"
                 />
               </td>
-              <td className="px-6 py-4 flex gap-x-2">
+              <td className=" py-2 flex gap-x-2">
                 <Link to={`/admin/categorias/agregar/${categoria.id}`}>
                   <button className="px-4 py-2 bg-colorPrimario text-white rounded hover:bg-colorPrimarioHover">
                     <FontAwesomeIcon icon={getIconByName("pencil")} size="lg" />
