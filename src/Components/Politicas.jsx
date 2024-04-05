@@ -33,7 +33,7 @@ const Politicas = ({ onClose }) => {
         <div className="flex justify-end">
           <button
             onClick={onClose}
-            className=" bg-blue-500 w-full mt-4 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className=" bg-colorPrimario w-full mt-4 text-white px-4 py-2 rounded hover:bg-blue-600"
           >
             Cerrar
           </button>

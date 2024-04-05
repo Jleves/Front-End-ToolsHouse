@@ -62,71 +62,49 @@ const ListarUsuarios = () => {
   };
 
   return (
-    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          Usuarios
-        </h3>
-      </div>
-
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+    <div className="relative overflow-x-hidden shadow-md w-full rounded-lg">
+      <table className=" table w-full my-4 ml-8 text-left text-black">
+        <thead className=" text-black ">
           <tr>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th scope="col" className="py-3 text-left tracking-wider">
               Nombre
             </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th scope="col" className="py-3 text-left tracking-wider">
               Apellidos
             </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th scope="col" className="py-3 text-left tracking-wider">
               Email
             </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
+            <th scope="col" className="py-3 text-left tracking-wider">
               Rol
             </th>
-            <th scope="col" className="relative px-6 py-3">
-              <span className="sr-only">Edit</span>
+            <th scope="col" className="relative py-3">
+              <span>Edit</span>
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="">
           {users.length > 0 &&
             users.map((user) => {
               if (user.id !== 1) {
                 return (
                   <tr key={user.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className=" font-medium text-gray-900">
                             {user.nombre}
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {user.apellido}
-                      </div>
+                    <td className="py-4 whitespace-nowrap">
+                      <div className=" text-gray-900">{user.apellido}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {user.username}
-                      </div>
+                    <td className="py-4 whitespace-nowrap">
+                      <div className=" text-gray-900">{user.username}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-normal">
+                    <td className="py-4 whitespace-normal">
                       <form className="inline-block mr-2">
                         <label htmlFor="roles" className="mr-2">
                           Rol:
@@ -143,10 +121,12 @@ const ListarUsuarios = () => {
                           <option value="ADMIN">ADMIN</option>
                         </select>
                       </form>
+                    </td>
+                    <td>
                       <button
                         type="submit"
                         onClick={() => updateRole(user.id, selectedRole)}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-colorPrimario text-white hover:bg-colorPrimarioHover font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
                       >
                         Update Role
                       </button>

@@ -1,63 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getIconByName } from "../utilities/icons";
 
 const Categories = ({ onCategorySelect }) => {
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null); 
+
+  useEffect(() => {
+    fetch("http://localhost:8080/Categorias/list")
+      .then((response) => response.json())
+      .then((data) => {
+        setCategories(data);
+      })
+      .catch((error) => console.error("Error fetching categories:", error));
+  }, []);
 
   const handleCategoryClick = (category) => {
-    if (selectedCategory === category) {
-      setSelectedCategory(null);
-      onCategorySelect(null);
-    } else {
-      setSelectedCategory(category);
-      onCategorySelect(category);
-    }
+    const newSelectedCategory = selectedCategory === category ? null : category;
+    setSelectedCategory(newSelectedCategory);
+    onCategorySelect(newSelectedCategory);
   };
+
   return (
-    <div className="w-full flex justify-between mb-6 flex-wrap">
-      <CategoryButton
-        label="Construccion"
-        category="Construccion"
-        iconName="hammer"
-        onClick={() => handleCategoryClick("Construccion")}
-        isActive={selectedCategory === "Construccion"}
-      />
-      <CategoryButton
-        label="Herreria"
-        category="Herreria"
-        iconName="toolbox"
-        onClick={() => handleCategoryClick("Herreria")}
-        isActive={selectedCategory === "Herreria"}
-      />
-      <CategoryButton
-        label="Exterior"
-        category="Exterior"
-        iconName="tree"
-        onClick={() => handleCategoryClick("Exterior")}
-        isActive={selectedCategory === "Exterior"}
-      />
-      <CategoryButton
-        label="Electricidad"
-        category="Electricidad"
-        iconName="lightbulb"
-        onClick={() => handleCategoryClick("Electricidad")}
-        isActive={selectedCategory === "Electricidad"}
-      />
-      <CategoryButton
-        label="Medicina"
-        category="Medicina"
-        iconName="houseMedical"
-        onClick={() => handleCategoryClick("Medicina")}
-        isActive={selectedCategory === "Medicina"}
-      />
-      <CategoryButton
-        label="Escolar"
-        category="Escolar"
-        iconName="pencil"
-        onClick={() => handleCategoryClick("Escolar")}
-        isActive={selectedCategory === "Escolar"}
-      />
+    <div className="w-full flex justify-left gap-48 mb-6 flex-wrap">
+      {categories.map((category) => (
+        <CategoryButton
+          key={category.id}
+          label={category.titulo}
+          category={category.titulo}
+          iconName={category.icono}
+          onClick={() => handleCategoryClick(category.titulo)}
+        />
+      ))}
     </div>
   );
 };
@@ -66,7 +40,7 @@ const CategoryButton = ({ label, category, onClick, isActive, iconName }) => {
   return (
     <button
       className={`${
-        isActive ? "font-bold !text-black" : ""
+        isActive ? "font-bold text-black" : ""
       } hover:underline focus:outline-none focus:shadow-outline-blue flex flex-col items-center gap-2 text-[#717171] px-2 py-1 rounded-lg`}
       onClick={onClick}
     >

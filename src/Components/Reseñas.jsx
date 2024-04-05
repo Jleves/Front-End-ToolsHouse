@@ -9,11 +9,11 @@ const Reseñas = ({ reseñasProp }) => {
     const day = String(date.getDate()).padStart(2, "0");
     return `${day}-${month}-${year}`;
   };
-  
+
   return (
     <>
       {/* <p>Total amount of stars: {totalStars}</p> */}
-      <h2 className="mb-2 font-semibold text-lg">Reseñas</h2>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {reseñasProp.length > 0 ? (
           reseñasProp.map((reseña) => {

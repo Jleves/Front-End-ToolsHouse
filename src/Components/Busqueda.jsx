@@ -61,21 +61,20 @@ const Busqueda = () => {
         onSubmit={handleFormSubmit}
       >
         {/* Campo de búsqueda */}
-        <div className="flex items-center w-full md:w-1/2 border border-gray-300 rounded-l-full bg-gray-50 mb-4 md:mb-0 md:mr-4">
-          
-            <svg
-              className="w-6 h-6 ml-4 text-gray-500"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
-          
+        <div className="flex items-center w-full md:w-1/2 border border-gray-300 rounded-l-full bg-gray-50 mb-4 md:mb-0 border-r-0">
+          <svg
+            className="w-6 h-6 ml-4 text-gray-500"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
+          >
+            <path
+              stroke="currentColor"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+            />
+          </svg>
+
           <input
             type="search"
             id="default-search"
@@ -122,20 +121,19 @@ const Busqueda = () => {
       {/* Mostrar resultados */}
       {showResults && (
         <div className="p-4 rounded-xl bg-[#e4e2d7]">
-          <h3 className="font-semibold text-xl mb-4 text-center">
-            Resultados
-          </h3>
+          <h3 className="font-semibold text-xl mb-4 text-center">Resultados</h3>
           {searchResults ? (
-           
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {searchResults.map((producto) => (
                 <div
                   key={producto.id}
                   className="tarjetaProducto transition-all"
                 >
-                  < ProductCard producto={producto} showDescription={false} showCategory={false}/> 
-                
+                  <ProductCard
+                    producto={producto}
+                    showDescription={false}
+                    showCategory={false}
+                  />
                 </div>
               ))}
             </div>
