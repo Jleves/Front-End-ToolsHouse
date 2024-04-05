@@ -318,15 +318,15 @@ const Reserva = ({ precio, producto }) => {
           </div>
         )}
         <div className="w-full my-4">
-          <p className="text-md">
-            <span className="underline">
+          <p className="text-md flex justify-between items-center">
+            <span>
               ${precio} USD por {diferenciaDias} dias
             </span>
-            <span> ${totalCost.toFixed(2)}</span>
+            <span className="underline"> ${totalCost.toFixed(2)}</span>
           </p>
-          <p className="text-md">
-            <span className="underline">Comision </span>
-            <span>$0 USD</span>
+          <p className="text-md flex justify-between items-center">
+            <span>Comision </span>
+            <span className="underline">$0 USD</span>
           </p>
         </div>
       </div>

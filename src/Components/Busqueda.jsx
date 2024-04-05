@@ -86,7 +86,7 @@ const Busqueda = () => {
           <input
             type="search"
             id="default-search"
-            className="relative z-50 w-full px-6 py-[.8em] pl-10 text-sm text-gray-900 border border-r-0 border-gray-300 rounded-l-full bg-gray-50"
+            className="relative z-40 w-full px-6 py-[.8em] pl-10 text-sm text-gray-900 border border-r-0 border-gray-300 rounded-l-full bg-gray-50"
             placeholder="Qué estás buscando?"
             autoComplete="off"
             value={searchQuery}
@@ -115,7 +115,7 @@ const Busqueda = () => {
             min={startDate}
             placeholder="01/01/2000"
           />
-          <div className="flex justify-center ">
+          <div className="flex justify-center w-full md:w-auto">
             <button
               type="submit"
               className="z-50 text-colorClaro bg-colorPrimario hover:bg-colorPrimarioHover focus:ring-4 focus:outline-none font-medium rounded-full text-sm px-6 py-1.5 transition-all"
@@ -124,7 +124,7 @@ const Busqueda = () => {
             </button>
           </div>
           {showResults && ( // Render search results only when showResults state is true
-            <div className="absolute z-30 left-0 top-[8px] pt-12 pb-4 pl-4 w-full rounded-xl bg-[#e4e2d7]">
+            <div className="absolute left-0 top-[8px] pt-12 pb-4 pl-4 w-full rounded-xl bg-[#e4e2d7]">
               {searchResults ? (
                 <ul>
                   {searchResults.map((item) => (

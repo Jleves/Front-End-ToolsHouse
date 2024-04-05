@@ -4,9 +4,12 @@ import { toast } from "sonner";
 
 const Favs = () => {
   const [token, setToken] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const { id } = useParams();
+  const { id } = useParams(); 
   const [user, setUser] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(() => {
+    const favs = JSON.parse(localStorage.getItem("favs")) || [];
+    return favs.includes(id); 
+  })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,32 +39,42 @@ const Favs = () => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-
     if (storedToken) {
       setToken(storedToken);
     }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("isFavorite", JSON.stringify(isFavorite));
+  }, [isFavorite]);
 
   const handleToggleFavorite = async () => {
     try {
       if (token) {
         const url = `http://localhost:8080/User/${user.id}/favs/${id}`;
         const method = isFavorite ? "DELETE" : "POST";
-
+  
         const response = await fetch(url, {
           method: method,
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
+  
         if (!response.ok) {
           throw new Error(`Error toggling favorite: ${response.status}`);
         }
-
+  
+        // Define the favs variable by retrieving the current favorites from localStorage
+        let favs = JSON.parse(localStorage.getItem("favs")) || [];
+  
         if (isFavorite) {
+          // Remove the product ID from the array if it's currently a favorite
+          favs = favs.filter(favId => favId !== id);
           toast.error("Producto eliminado de favoritos");
         } else {
+          // Add the product ID to the array if it's not currently a favorite
+          favs.push(id);
           toast("Producto agregado a favoritos!", {
             classNames: {
               actionButton: "!bg-colorPrimario",
@@ -72,8 +85,10 @@ const Favs = () => {
             },
           });
         }
-
-        setIsFavorite((prevIsFavorite) => !prevIsFavorite);
+  
+        // Update the favorites in localStorage with the modified array
+        localStorage.setItem("favs", JSON.stringify(favs));
+        setIsFavorite(!isFavorite);
       }
     } catch (error) {
       console.error("Error toggling favorite:", error);

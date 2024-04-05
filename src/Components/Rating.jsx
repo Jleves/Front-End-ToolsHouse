@@ -10,8 +10,8 @@ const Rating = ({ rating = 0 }) => {
           <div key={"star-" + ratingValue}>
             <FontAwesomeIcon
               icon={getIconByName("star")}
-              color={ratingValue <= rating ? "#ffc107" : "#e4e5e9"}
-              size={"lg"}
+              color={ratingValue <= rating ? "#3C48B9" : "#e4e5e9"}
+              size={"sm"}
             />
           </div>
         );

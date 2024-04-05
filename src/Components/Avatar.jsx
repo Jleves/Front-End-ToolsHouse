@@ -38,7 +38,7 @@ const Avatar = () => {
 
           const responseData = await response.json();
           setData(responseData);
-          console.log(data);
+
           setMostrarBoton(responseData.role !== "USER");
         }
       } catch (error) {
@@ -128,12 +128,12 @@ const Avatar = () => {
               id="dropdownHover"
               className={`z-10 ${
                 isDropdownOpen ? "absolute" : "hidden"
-              } top-14 right-4 bg-white rounded-lg shadow-md w-50`}
+              } top-8 right-0 bg-white rounded-lg shadow-md w-50`}
             >
               <ul className="" aria-labelledby="dropdownHover">
                 <li>
                   <Link
-                    to="/*"
+                    to="/ListarReservas"
                     className="px-4 py-2 text-base font-light text-black hover:bg-gray-100 rounded-lg flex items-center justify-left gap-2"
                   >
                     <svg
@@ -151,7 +151,7 @@ const Avatar = () => {
                       <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
                       <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
                     </svg>
-                    Reseñas
+                    Reservas
                   </Link>
                 </li>
                 <li>
@@ -196,7 +196,7 @@ const Avatar = () => {
                       <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
                       <path d="M7 12h14l-3 -3m0 6l3 -3" />
                     </svg>
-                    Cerrar sesión
+                    Log out
                   </Link>
                 </li>
               </ul>
