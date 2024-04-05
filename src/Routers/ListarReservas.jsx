@@ -45,6 +45,9 @@ const ListarReservas = () => {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
         }
+        setReservas((prevReservas) =>
+          prevReservas.filter((reser) => reser.id !== id)
+        );
 
         setReservas(reservas.filter((reserva) => reserva.id !== id));
         toast.success(`La Reserva se eliminó correctamente.`);
@@ -62,7 +65,7 @@ const ListarReservas = () => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    return `${day}-${month}-${year}`;
   };
 
   return (
@@ -96,29 +99,33 @@ const ListarReservas = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y text-left divide-gray-200">
-                  {reservas.map((reserva) => (
-                    <tr key={reserva.id}>
-                      <td className="py-2">{reserva.id}</td>
-                      <td className="py-2">{reserva.herramientaId?.nombre}</td>
-                      <td className="py-2">
-                        {formatDate(reserva.fechaAlquiler)}
-                      </td>
-                      <td className="py-2">
-                        {formatDate(reserva.fechaDevolucion)}
-                      </td>
-                      <td className="px-6 py-4 flex gap-x-2">
-                        <button
-                          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-400 transition-all"
-                          onClick={() => handleDelete(reserva.id)}
-                        >
-                          <FontAwesomeIcon
-                            icon={getIconByName("trash")}
-                            size="lg"
-                          />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {reservas
+                    .sort((a, b) => a.id - b.id)
+                    .map((reserva) => (
+                      <tr key={reserva.id}>
+                        <td className="py-2 px-2">{reserva.id}</td>
+                        <td className="py-2 px-2">
+                          {reserva.herramientaId.nombre}
+                        </td>
+                        <td className="py-2 px-2">
+                          {formatDate(reserva.fechaAlquiler)}
+                        </td>
+                        <td className="py-2 px-2">
+                          {formatDate(reserva.fechaDevolucion)}
+                        </td>
+                        <td className="pr-6 py-2 flex gap-x-2">
+                          <button
+                            className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-400 transition-all"
+                            onClick={() => handleDelete(reserva.id)}
+                          >
+                            <FontAwesomeIcon
+                              icon={getIconByName("trash")}
+                              size="md"
+                            />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             )}

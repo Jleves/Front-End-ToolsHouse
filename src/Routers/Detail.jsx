@@ -92,6 +92,7 @@ const Detail = () => {
     if (count === 0) {
       return;
     }
+    console.log(resenas);
     resenas.map((resena) => {
       sumaRating += resena?.raiting || 0;
     });
@@ -136,7 +137,6 @@ const Detail = () => {
 
     const newReview = {
       fecha: formattedDate,
-      autor: data.nombre,
       raiting: rating,
       comentario: opinion,
       herramienta_idReseña: producto.id,
@@ -187,6 +187,7 @@ const Detail = () => {
           }
           const responseData = await response.json();
           setData(responseData);
+          console.log(data);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
