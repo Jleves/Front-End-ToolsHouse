@@ -21,52 +21,54 @@ const Detail = () => {
   const [rating, setRating] = useState(0);
   const [opinion, setOpinion] = useState("");
   const [reseñas, setReseñas] = useState([]);
-  const [toolRating, setToolRating] = useState(0);
   const { isLogged } = useAuth();
   const [token, setToken] = useState(null);
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    const fetchProducto = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8080/Herramientas/list/${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Error al obtener la Herramienta");
-        }
-        const responseData = await response.json();
-        const imagenes = responseData.imagenes
-          ? responseData.imagenes.map((imagen) => imagen.url)
-          : [];
-        const productoData = {
-          id: responseData.id,
-          nombre: responseData.nombre,
-          descripcion: responseData.descripcion,
-          precio: responseData.precio,
-          categoria: responseData.categoria,
-          imagenes: imagenes,
-          caracteristicas: responseData.caracteristicas,
-          fechaInicioReserva: "2024-04-10",
-          fechaFinalReserva: "2024-04-16",
-        };
-
-        setProducto(productoData);
-      } catch (error) {
-        console.error("Error haciendo el fetch:", error);
-      }
-    };
-
+    
     fetchResenas();
 
     fetchProducto();
   }, [id]);
+
+  const fetchProducto = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/Herramientas/list/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Error al obtener la Herramienta");
+      }
+      const responseData = await response.json();
+      const imagenes = responseData.imagenes
+        ? responseData.imagenes.map((imagen) => imagen.url)
+        : [];
+      const productoData = {
+        id: responseData.id,
+        nombre: responseData.nombre,
+        descripcion: responseData.descripcion,
+        precio: responseData.precio,
+        categoria: responseData.categoria,
+        imagenes: imagenes,
+        caracteristicas: responseData.caracteristicas,
+        fechaInicioReserva: "2024-04-10",
+        fechaFinalReserva: "2024-04-16",
+        raiting: getToolRating(responseData.reseñas || [])
+      };
+      
+      setProducto(productoData);
+      
+    } catch (error) {
+      console.error("Error haciendo el fetch:", error);
+    }
+  };
 
   const fetchResenas = async () => {
     try {
@@ -79,7 +81,7 @@ const Detail = () => {
       const data = await response.json();
 
       setReseñas(data);
-      getToolRating(data);
+      
       return data;
     } catch (error) {
       console.error("Error al obtener las reseñas:", error);
@@ -92,7 +94,7 @@ const Detail = () => {
     if (count === 0) {
       return;
     }
-    console.log(resenas);
+    
     resenas.map((resena) => {
       sumaRating += resena?.raiting || 0;
     });
@@ -100,7 +102,8 @@ const Detail = () => {
       return;
     }
     const rating = sumaRating / count;
-    setToolRating(rating);
+    return rating;
+    
   };
 
   const handleRatingClick = () => {
@@ -157,6 +160,7 @@ const Detail = () => {
       }
 
       await fetchResenas();
+      await fetchProducto();
 
       setRating(0);
       setOpinion("");
@@ -187,7 +191,7 @@ const Detail = () => {
           }
           const responseData = await response.json();
           setData(responseData);
-          console.log(data);
+          
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -284,7 +288,7 @@ const Detail = () => {
                 <span className="rounded-full px-2 py-1 bg-black text-white text-xs">
                   {producto.categoria.titulo}
                 </span>
-                <Rating rating={toolRating} />
+                <Rating rating={producto.raiting} />
               </div>
               <p className="text-lg mt-2">{producto.descripcion}</p>
             </div>

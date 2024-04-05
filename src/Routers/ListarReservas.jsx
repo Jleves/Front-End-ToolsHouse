@@ -120,7 +120,7 @@ const ListarReservas = () => {
                           >
                             <FontAwesomeIcon
                               icon={getIconByName("trash")}
-                              size="md"
+                              size="sm"
                             />
                           </button>
                         </td>
