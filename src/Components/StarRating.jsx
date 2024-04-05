@@ -22,7 +22,7 @@ const StarRating = ({ value, onChange }) => {
             <FontAwesomeIcon
               icon={getIconByName("star")}
               color={ratingValue <= (hover || value) ? "#ffc107" : "#e4e5e9"}
-              size={"md"}
+              size={"sm"}
               onMouseEnter={() => setHover(ratingValue)}
               onMouseLeave={() => setHover(null)}
             />
