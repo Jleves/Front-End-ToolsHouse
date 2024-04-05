@@ -47,6 +47,9 @@ const ListarReservas = () => {
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status}`);
         }
+        setReservas((prevReservas) => 
+        prevReservas.filter((reser) => reser.id !== id)
+        )
 
         alert("La Reserva se eliminó correctamente.");
       } catch (error) {
@@ -63,33 +66,35 @@ const ListarReservas = () => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    return `${day}-${month}-${year}`;
   };
 
   return (
         
-    <table className="table w-full my-4 ml-8">
+    <table className="table w-full my-4 ml-4">
     <thead className="text-left">
-      <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Herramienta</th>
-        <th scope="col">Fecha Alquiler</th>
-        <th scope="col">Fecha Devolución</th>
+      <tr >
+        <th scope="col" className='px-2'>#</th>
+        <th scope="col" className='px-2'>Herramienta</th>
+        <th scope="col" className='px-4'>Fecha Alquiler</th>
+        <th scope="col" className='px-2'>Fecha Devolución</th>
       </tr>
     </thead>
     <tbody className="divide-y divide-gray-200">
-      {reservas.map((reserva) => (
+      {reservas
+        .sort((a, b) => a.id - b.id) 
+        .map((reserva) => (
         <tr key={reserva.id}>
-          <td className="py-2">{reserva.id}</td>
-          <td className="py-2">{ reserva.herramientaId?.nombre}</td>
-          <td className="py-2">{formatDate(reserva.fechaAlquiler)}</td>
-          <td className="py-2">{formatDate(reserva.fechaDevolucion)}</td>
-          <td className="px-6 py-4 flex gap-x-2">
+          <td className="py-2 px-2">{reserva.id}</td>
+          <td className="py-2 px-2">{ reserva.herramientaId.nombre}</td>
+          <td className="py-2 px-2">{formatDate(reserva.fechaAlquiler)}</td>
+          <td className="py-2 px-2">{formatDate(reserva.fechaDevolucion)}</td>
+          <td className="pr-6 py-2 flex gap-x-2">
                 <button
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-400 transition-all"
+                  className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-400 transition-all"
                   onClick={() => handleDelete(reserva.id)}
                 >
-                  <FontAwesomeIcon icon={getIconByName("trash")} size="lg" />
+                  <FontAwesomeIcon icon={getIconByName("trash")} size="md" />
                 </button>
               </td>
         </tr>

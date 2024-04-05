@@ -134,7 +134,8 @@ const Busqueda = () => {
                   key={producto.id}
                   className="tarjetaProducto transition-all"
                 >
-                  <ProductCard producto={producto} />
+                  < ProductCard producto={producto} showDescription={false} showCategory={false}/> 
+                
                 </div>
               ))}
             </div>
