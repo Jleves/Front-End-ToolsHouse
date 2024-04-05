@@ -44,7 +44,7 @@ const Products = ({ selectedCategory }) => {
         setProductos(ordenRandom);
 
       } catch (error) {
-        console.log(error.message);
+         console.log(error.message);
       }
     };
     fetchData();
@@ -70,8 +70,7 @@ const Products = ({ selectedCategory }) => {
     );
     const count = resenasPorHerramienta.length;
     let sumaRating = 0;
-      
-      //  console.log(resenasPorHerramienta);
+      // console.log(resenasPorHerramienta);
     if (count === 0) {
       return sumaRating;
     }
@@ -124,7 +123,9 @@ const Products = ({ selectedCategory }) => {
           )
           .map((producto) => (
             <div key={producto.id} className="tarjetaProducto transition-all">
-              <ProductCard producto={producto} />
+              <ProductCard producto={producto}
+                
+              />
             </div>
           ))}
       </div>
