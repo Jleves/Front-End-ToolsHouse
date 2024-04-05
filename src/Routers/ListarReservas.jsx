@@ -3,6 +3,7 @@ import { useAuth } from "../Context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getIconByName } from "../utilities/icons";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const ListarReservas = () => {
   const [reservas, setReservas] = useState([]);
@@ -45,24 +46,16 @@ const ListarReservas = () => {
           throw new Error(`HTTP error: ${response.status}`);
         }
 
-        alert("La Reserva se eliminó correctamente.");
+        setReservas(reservas.filter((reserva) => reserva.id !== id));
+        toast.success(`La Reserva se eliminó correctamente.`);
       } catch (error) {
         console.error("Error:", error.message);
-        alert("Hubo un problema al eliminar la Reserva.");
+        toast.error(`Hubo un problema al eliminar la Reserva.`);
       }
     } else {
-      alert("Eliminacion cancelada.");
+      toast.error(`Eliminacion cancelada.`);
     }
   };
-
-  // {productos.length === 0 ? (
-  //   <div className="flex flex-col items-center w-full gap-2">
-  //     <img src="/noFavs.svg" alt="" />
-  //     <p className="lg:w-2/3 text-center font-semibold text-xl mx-auto leading-relaxed">
-  //       No tenes productos favoritos.
-  //     </p>
-  //   </div>
-  // ) : (
 
   const formatDate = (fecha) => {
     const date = new Date(fecha);

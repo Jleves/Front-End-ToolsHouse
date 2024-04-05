@@ -102,7 +102,7 @@ const Detail = () => {
     setToolRating(rating);
   };
 
-  const handleRatingClick = (event) => {
+  const handleRatingClick = () => {
     if (isLogged) {
       setShowRating((prevState) => !prevState);
     } else {
@@ -354,7 +354,10 @@ const Detail = () => {
                 />
               </svg>
             </span>
-            <div className="absolute -right-14 top-12 flex flex-col md:flex-row gap-4 px-4"  onClick={(event) => event.stopPropagation()} >
+            <div
+              className="absolute -right-14 top-12 flex flex-col md:flex-row gap-4 px-4"
+              onClick={(event) => event.stopPropagation()}
+            >
               {showRating && isLogged && (
                 <div className="flex flex-col gap-2 px-4">
                   <div className="bg-white p-4 rounded-lg shadow-md ">
