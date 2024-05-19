@@ -25,7 +25,7 @@ const Avatar = () => {
     const fetchData = async () => {
       try {
         if (token) {
-          const response = await fetch(`http://localhost:8080/User/profile`, {
+          const response = await fetch(`https://ec2-54-145-44-94.compute-1.amazonaws.com/User/profile`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,

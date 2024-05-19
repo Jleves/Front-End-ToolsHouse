@@ -58,7 +58,7 @@ const Reserva = ({ precio, producto }) => {
     const fetchData = async () => {
       try {
         if (token) {
-          const response = await fetch(`http://localhost:8080/User/profile`, {
+          const response = await fetch(`https://ec2-54-145-44-94.compute-1.amazonaws.com/User/profile`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -163,7 +163,7 @@ const Reserva = ({ precio, producto }) => {
         usuarioRole: data.role,
       };
 
-      const response = await fetch("http://localhost:8080/Reservas/create", {
+      const response = await fetch("https://ec2-54-145-44-94.compute-1.amazonaws.com/Reservas/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

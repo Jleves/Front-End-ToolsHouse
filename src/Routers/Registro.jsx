@@ -52,7 +52,7 @@ const Resgistro = () => {
     }
 
     if (Object.keys(erroresValidacion).length === 0) {
-      fetch("http://localhost:8080/auth/register", {
+      fetch("https://ec2-54-145-44-94.compute-1.amazonaws.com/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

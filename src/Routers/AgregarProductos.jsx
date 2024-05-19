@@ -25,7 +25,7 @@ const AgregarProductos = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8080/Herramientas/list/${id}`, {
+      fetch(`https://ec2-54-145-44-94.compute-1.amazonaws.com/Herramientas/list/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -177,7 +177,7 @@ const AgregarProductos = () => {
 
       try {
         const response = await fetch(
-          "http://localhost:8080/Herramientas/update",
+          "https://ec2-54-145-44-94.compute-1.amazonaws.com/Herramientas/update",
           {
             method: "PUT",
             headers: {
@@ -215,7 +215,7 @@ const AgregarProductos = () => {
     } else {
       try {
         const response = await fetch(
-          "http://localhost:8080/Herramientas/create",
+          "https://ec2-54-145-44-94.compute-1.amazonaws.com/Herramientas/create",
           {
             method: "POST",
             headers: {
@@ -253,7 +253,7 @@ const AgregarProductos = () => {
   };
 
   useEffect(() => {
-    fetch("http://localhost:8080/Categorias/list", {
+    fetch("https://ec2-54-145-44-94.compute-1.amazonaws.com/Categorias/list", {
       method: "GET",
 
       headers: {
@@ -275,7 +275,7 @@ const AgregarProductos = () => {
   console.log(categorias);
 
   useEffect(() => {
-    fetch("http://localhost:8080/Caracteristicas/list", {
+    fetch("https://ec2-54-145-44-94.compute-1.amazonaws.com/Caracteristicas/list", {
       method: "GET",
 
       headers: {

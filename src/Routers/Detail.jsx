@@ -35,7 +35,7 @@ const Detail = () => {
   const fetchProducto = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/Herramientas/list/${id}`,
+        `https://ec2-54-145-44-94.compute-1.amazonaws.com/Herramientas/list/${id}`,
         {
           method: "GET",
           headers: {
@@ -73,7 +73,7 @@ const Detail = () => {
   const fetchResenas = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/Reseñas/herramienta/${id}`
+        `https://ec2-54-145-44-94.compute-1.amazonaws.com/Reseñas/herramienta/${id}`
       );
       if (!response.ok) {
         throw new Error("Error al obtener las reseñas");
@@ -146,7 +146,7 @@ const Detail = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/Reseñas/create", {
+      const response = await fetch("https://ec2-54-145-44-94.compute-1.amazonaws.com/Reseñas/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -181,7 +181,7 @@ const Detail = () => {
     const fetchData = async () => {
       try {
         if (token) {
-          const response = await fetch(`http://localhost:8080/User/profile`, {
+          const response = await fetch(`https://ec2-54-145-44-94.compute-1.amazonaws.com/User/profile`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

@@ -11,7 +11,7 @@ const ListarReservas = () => {
   const { token } = useAuth();
 
   useEffect(() => {
-    fetch("http://localhost:8080/User/profile", {
+    fetch("https://ec2-54-145-44-94.compute-1.amazonaws.com/User/profile", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +32,7 @@ const ListarReservas = () => {
     if (window.confirm("¿Estás seguro que quieres eliminar esta Reserva?")) {
       try {
         const response = await fetch(
-          `http://localhost:8080/Reservas/delete/${id}`,
+          `https://ec2-54-145-44-94.compute-1.amazonaws.com/Reservas/delete/${id}`,
           {
             method: "DELETE",
             headers: {

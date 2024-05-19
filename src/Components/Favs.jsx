@@ -15,7 +15,7 @@ const Favs = () => {
     const fetchData = async () => {
       try {
         if (token) {
-          const response = await fetch(`http://localhost:8080/User/profile`, {
+          const response = await fetch(`https://ec2-54-145-44-94.compute-1.amazonaws.com/User/profile`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ const Favs = () => {
   const handleToggleFavorite = async () => {
     try {
       if (token) {
-        const url = `http://localhost:8080/User/${user.id}/favs/${id}`;
+        const url = `https://ec2-54.-145-44-94compute-1.amazonaws.com/User/${user.id}/favs/${id}`;
         const method = isFavorite ? "DELETE" : "POST";
   
         const response = await fetch(url, {

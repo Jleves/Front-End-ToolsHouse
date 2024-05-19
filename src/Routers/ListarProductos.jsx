@@ -11,7 +11,7 @@ const ListarProductos = () => {
     const fetchListarProducto = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8080/Herramientas/list",
+          "https://ec2-54-145-44-94.compute-1.amazonaws.com/Herramientas/list",
           {
             method: "GET",
             headers: {
@@ -53,7 +53,7 @@ const ListarProductos = () => {
     if (window.confirm("¿Estás seguro que quieres eliminar este producto?")) {
       try {
         const response = await fetch(
-          `http://localhost:8080/Herramientas/delete/${id}`,
+          `ec2-54-145-44-94.compute-1.amazonaws.com/Herramientas/delete/${id}`,
           {
             method: "DELETE",
           }

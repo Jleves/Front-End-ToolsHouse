@@ -7,7 +7,7 @@ const ListarUsuarios = () => {
   const { token } = useAuth();
 
   useEffect(() => {
-    fetch("http://localhost:8080/User/list", {
+    fetch("https://ec2-54-145-44-94.compute-1.amazonaws.com/User/list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +30,7 @@ const ListarUsuarios = () => {
       console.log("userId:", userId);
       console.log("newRole:", newRole);
       await fetch(
-        `http://localhost:8080/User/updateRole/${userId}/usuarioRole`,
+        `https://ec2-54-145-44-94.compute-1.amazonaws.com/User/updateRole/${userId}/usuarioRole`,
         {
           method: "PUT",
           headers: {

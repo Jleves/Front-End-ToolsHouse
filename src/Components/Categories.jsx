@@ -7,7 +7,7 @@ const Categories = ({ onCategorySelect }) => {
   const [selectedCategory, setSelectedCategory] = useState(null); 
 
   useEffect(() => {
-    fetch("http://localhost:8080/Categorias/list")
+    fetch("https://ec2-54-145-44-94.compute-1.amazonaws.com/Categorias/list")
       .then((response) => response.json())
       .then((data) => {
         setCategories(data);

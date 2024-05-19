@@ -20,7 +20,7 @@ const ListarFavorito = () => {
     const fetchData = async () => {
       try {
         if (token) {
-          const response = await fetch(`http://localhost:8080/User/profile`, {
+          const response = await fetch(`https://ec2-54-145-44-94.compute-1.amazonaws.com/User/profile`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ const ListarFavorito = () => {
       try {
         if (user.id) {
           const response = await fetch(
-            `http://localhost:8080/User/${user.id}/favs`,
+            `https://ec2-54-145-44-94.compute-1.amazonaws.com/User/${user.id}/favs`,
             {
               method: "GET",
               headers: {
@@ -82,7 +82,7 @@ const ListarFavorito = () => {
       if (token) {
         // Realiza la solicitud al servidor para agregar/quitar el elemento de favoritos
         const response = await fetch(
-          `http://localhost:8080/User/${user.id}/favs/${id}`,
+          `https://ec2-54-145-44-94.compute-1.amazonaws.com/User/${user.id}/favs/${id}`,
           {
             method: "DELETE",
             headers: {

@@ -11,7 +11,7 @@ const ListarCategorias = () => {
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/Categorias/list", {
+    fetch("https://ec2-54-145-44-94.compute-1.amazonaws.com/Categorias/list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +34,7 @@ const ListarCategorias = () => {
     const fetchListarProducto = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8080/Herramientas/list",
+          "https://ec2-54-145-44-94.compute-1.amazonaws.com/Herramientas/list",
           {
             method: "GET",
             headers: {
@@ -86,7 +86,7 @@ const ListarCategorias = () => {
     if (window.confirm("¿Estás seguro que quieres eliminar esta categoria?")) {
       try {
         const response = await fetch(
-          `http://localhost:8080/Categorias/delete/${id}`,
+          `https://ec2-54-145-44-94.compute-1.amazonaws.com/Categorias/delete/${id}`,
           {
             method: "DELETE",
             headers: {

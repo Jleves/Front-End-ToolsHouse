@@ -45,7 +45,7 @@ const AgregarCategoria = () => {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8080/Categorias/list/${id}`, {
+      fetch(`https://ec2-54-145-44-94.compute-1.amazonaws.com/Categorias/list/${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +98,7 @@ const AgregarCategoria = () => {
       try {
         console.log(categoryData);
         const response = await fetch(
-          `http://localhost:8080/Categorias/update`,
+          `https://ec2-54-145-44-94.compute-1.amazonaws.com/Categorias/update`,
           {
             method: "PUT",
             headers: {
@@ -131,7 +131,7 @@ const AgregarCategoria = () => {
       try {
         console.log(categoryData);
         const response = await fetch(
-          "http://localhost:8080/Categorias/create",
+          "https://ec2-54-145-44-94.compute-1.amazonaws.com/Categorias/create",
           {
             method: "POST",
             headers: {

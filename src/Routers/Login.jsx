@@ -11,7 +11,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    fetch("http://localhost:8080/auth/login", {
+    fetch("https://ec2-54-145-44-94.compute-1.amazonaws.com/auth/login"
+    , {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

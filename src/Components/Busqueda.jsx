@@ -21,7 +21,7 @@ const Busqueda = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/Herramientas/buscar/${searchQuery}/${startDate}/${endDate}`
+        `https://ec2-54-145-44-94.compute-1.amazonaws.com/Herramientas/buscar/${searchQuery}/${startDate}/${endDate}`
       );
 
       if (response.ok) {

@@ -44,7 +44,7 @@ const AgregarCaracteristica = () => {
   const { token } = useAuth();
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8080/Caracteristicas/list/${id}`, {
+      fetch(`https://ec2-54-145-44-94.compute-1.amazonaws.com/Caracteristicas/list/${id}`, {
         method: "GET",
         header: {
           "Content-Type": "application/json",
@@ -97,7 +97,7 @@ const AgregarCaracteristica = () => {
       try {
         console.log(caracteristicaData);
         const response = await fetch(
-          `http://localhost:8080/Caracteristicas/update`,
+          `https://ec2-54-145-44-94.compute-1.amazonaws.com/Caracteristicas/update`,
           {
             method: "PUT",
             headers: {
@@ -130,7 +130,7 @@ const AgregarCaracteristica = () => {
       try {
         console.log(caracteristicaData);
         const response = await fetch(
-          "http://localhost:8080/Caracteristicas/create",
+          "https://ec2-54-145-44-94.compute-1.amazonaws.com/Caracteristicas/create",
           {
             method: "POST",
             headers: {
